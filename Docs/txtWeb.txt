@@ -1,0 +1,72 @@
+The hash code for your registered mobile number +91-8870435477 is 72a556c2-c3fd-4a9a-aff8-922452acb335
+
+Service Name: @mymap
+Booked on:05 Sep 2012
+Service App Key:b8a0e901-8ef6-4beb-bb7c-90536c887b76
+
+Publisher ID:
+c5d909c0-9fba-4a27-8250-589bd55bcd13
+
+What are the parameters that the platform sends to your application
+There are 5 parameters that the platform sends to an application viz-
+
+txtweb-mobile: The mobile number of the end user in hash format
+
+txtweb-message: Message sent by the end user
+
+txtweb-id: Unique identifier for the message
+
+txtweb-verifyid: The id used to verify the source. Check API documentation for more details
+
+txtweb-protocol: The protocol through which the message was received
+
+SMS: 1000
+USSD: 1001
+WEB: 200x
+EMULATOR: 2100
+INSTANT MESSENGER: 220x
+
+txtweb_req = {'txtweb-mobile':,'txtweb-message':,'txtweb-id':,'txtweb-verifyid':,'txtweb-protocol':}
+
+GET request from txtweb:
+/SMS/SMSOUT?
+txtweb-message=&
+txtweb-id=8a40cc8c-6098-4b45-88bf-02161eb05b4f&
+txtweb-verifyid=e40ddac0c912aa3570641663619e2e43425e9db2fee5794123c407716ccaa0c71afe8135bd8751e99c394da39c7603122e70ba54a6508ea8be94d3f2e252d6c489bd5ab99c8499b5e2c474aa19592ae0e2f15c3b115c4abe483153bd0fb31ae687c7c17cea9a3043&
+txtweb-mobile=6d0311b1-96d4-4222-a556-93c783ed513d&
+txtweb-aggid=21000&
+txtweb-protocol=2100
+
+/SMS/SMSOUT?
+txtweb-message=
+&txtweb-id=9b7cc68d-d2ee-4340-b085-365e94c93f9c&
+txtweb-verifyid=e40ddac0c912aa355ca603e34cab9ad5a05068d92eea8f2e3d9bdd36b8b393171afe8135bd8751e99c394da39c7603122e70ba54a6508ea8be94d3f2e252d6c4e643b674bea450f41920ba57ef7802c79e7160324d3fbf0b967e75ff283aa2a987c7c17cea9a3043&
+txtweb-mobile=72a556c2-c3fd-4a9a-aff8-922452acb335&
+txtweb-aggid=10000&
+txtweb-protocol=1000
+
+get user location:
+http://api.txtweb.com/v1/location/get?txtweb-mobile=AB431AC0-7CC8-11E0-819A-0800200C9A66
+txtweb-mobile
+
+verify msg from txtweb
+http://api.txtweb.com/v3/verify?txtweb-message=abcd&txtweb-verifyid=21978c5e8894ae5fb110cc40580155b858e96b11aceef
+291c455bca9ff1b05590fc776ecbb4344de48c9eef2edfb556574810a155eadaf65aef647ab3e60e5d00b0b51ae0f&txtweb-mobile=AB431AC0-7CC8-11E0-819A-0800200C9A66&txtweb-protocol=1000
+05590a3a43eedcf96d3bc54685e22f52bedea7
+txtweb-message
+txtweb-verifyid
+txtweb-mobile
+txtweb-protocol
+
+
+PUSH Push a message
+
+http://api.txtweb.com/v1/push?txtweb-mobile=AB431AC0-7CC8-11E0-819A-0800200C9A66&txtweb-
+message=%3Chtml%3E%3Chead%3E%3Ctitle%3EYour%20App%3C%2Ftitle%3E%3Cmeta%20name%3D%22txtweb-
+appkey%22%20content%3D%225C1B4AE0-7CCC-11E0-819A-0800200C9A66%22%2F%3E%3C%2Fhead%3E%3Cbody
+%3EYour%20Message%3C%2Fbody%3E%3C%2Fhtml%3E%0A%0A%0A&txtweb-pubkey=3B1ACE60-7CCC-11E0-819A
+-0800200C9A66
+
+txtweb-mobile
+txtweb-message
+txtweb-pubkey
