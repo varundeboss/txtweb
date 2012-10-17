@@ -38,7 +38,11 @@ class Personal:
             return False
         return True
 
+def handle_personal(msg):
+    PObj = Personal(msg)
+    return PObj.reply
+
+
 if __name__ == "__main__":
-    PObj = Personal('prl gaaddr 0')
-    print PObj.reply
+    print handle_personal('prl gaaddr a')
 
