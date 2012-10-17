@@ -36,6 +36,7 @@ def process_txtweb_request(querystring,post_url):
         
         print "txtWeb Resp :: ",txtweb_resp,"\n"
         txtWebObj.put_out_db()
+        return 
     except Exception,e:
         # Send error mail and log
         pass
