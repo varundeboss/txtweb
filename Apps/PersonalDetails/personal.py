@@ -8,8 +8,6 @@ class Personal:
     def __init__(self,msg):
         self.msg = ' '.join(msg.strip().split())
         self.reply = ""
-        self.codefile = "/codelist.txt"
-        self.personalfile = "/personal.txt"
 
         self.msg_list = self.msg.split(' ')
         try:self.keylist = ' '.join(self.msg_list[2:])
@@ -30,26 +28,48 @@ class Personal:
             except:self.keyword = ""
             self.content = ""
         
-#        import pdb;pdb.set_trace()
-
+        #import pdb;pdb.set_trace()
+        pass_flag = True
         if str(self.keyword).upper() == "HELP":
             self.key = "HELP"
-            self.reply = perconf.ERR_MSGS['HELP']
+            pers_dict = self.read_personal_file()
+            if pers_dict.keys():
+                self.reply = perconf.ERR_MSGS['HELP']%{'keywords':','.join(self.read_personal_file().keys())}
+            else:
+                self.reply = perconf.ERR_MSGS['EMPTYHELP']
+            pass_flag = False
         elif not self.code and not self.keyword:
             self.reply = perconf.ERR_MSGS['WELCOME']
+            pass_flag = False
             #raise WelcomeError(self.reply)
-        elif self.key == "ADD" and not self.keyword and not self.content:
+        elif self.key == "ADD" and (not self.keyword or not self.content):
             self.reply = perconf.ERR_MSGS['ADDERR']
+            pass_flag = False
         elif self.key == "GET" and not self.keyword:
             self.reply = perconf.ERR_MSGS['GETERR']
+            pass_flag = False
 
-        auth_stat = self.auth() or True 
-        if auth_stat and self.key != "HELP":
+        #import pdb;pdb.set_trace()
+        #auth_stat = self.auth() 
+        auth_stat = True
+        if auth_stat and pass_flag:
             if str(self.key).upper() == "ADD":
                 self.add_details()
             elif str(self.key).upper() == "GET":
                 self.get_details()
-        
+    
+    def read_personal_file(self):
+        pers_file = CUR_DIR + perconf.FILE_NAME_MAP['personalfile']
+        if os.path.isfile(pers_file):
+            per_keywords = {}
+            fObj = open(pers_file,'r')
+            for perdet in fObj:
+                if perdet:per_keywords[str(perdet).strip().split(':::')[0]] = str(perdet).strip().split(':::')[1]
+            fObj.close()
+        else:
+            per_keywords = {}
+        return per_keywords
+
     def get_details(self):
         '''
         if self.keyword.upper() not in perconf.PERSONAL_DICT.keys():
@@ -57,13 +77,13 @@ class Personal:
         else:
             self.reply = perconf.PERSONAL_DICT[self.keyword.upper()]
         '''
-        pers_file = CUR_DIR + self.personalfile
+        pers_file = CUR_DIR + perconf.FILE_NAME_MAP['personalfile']
         if os.path.isfile(pers_file):
             per_keywords = {}
             fObj = open(pers_file,'r')
             for perdet in fObj:
                 if perdet:per_keywords[str(perdet).strip().split(':::')[0]] = str(perdet).strip().split(':::')[1]
-                fObj.close()
+            fObj.close()
         else:
             per_keywords = {}
 
@@ -74,7 +94,7 @@ class Personal:
 
     def add_details(self):
         try:
-            pers_file = CUR_DIR + self.personalfile
+            pers_file = CUR_DIR + perconf.FILE_NAME_MAP['personalfile']
             if os.path.isfile(pers_file):
                 per_keywords = {}
                 fObj = open(pers_file,'r')
@@ -102,19 +122,18 @@ class Personal:
                 fObj = open(pers_file,'r')
                 text = fObj.read()
                 fObj.close()
-                import pdb;pdb.set_trace()
+                
                 fObj = open(pers_file,'w')
-                source_text = str(self.keyword) + ":::" + per_keywords[str(self.keyword)]
-                dest_text = str(self.keyword) + ":::" + str(self.content)
+                source_text = str(self.keyword).upper() + ":::" + per_keywords[str(self.keyword).upper()]
+                dest_text = str(self.keyword).upper() + ":::" + str(self.content)
                 fObj.write(text.replace(source_text, dest_text))
                 fObj.close()
                 self.reply = perconf.ERR_MSGS['UPSUC']
         except Exception,e:
-            print e.message
             self.reply = perconf.ERR_MSGS['ADDFAIL']
 
     def auth(self):
-        codefile = CUR_DIR + self.codefile
+        codefile = CUR_DIR + perconf.FILE_NAME_MAP['codefile']
         if os.path.isfile(codefile):
             code_list = []
             fObj = open(codefile,'r')
@@ -140,8 +159,11 @@ class Personal:
         return True
 
 def handle_personal(msg):
-    PObj = Personal(msg)
-    return PObj.reply
+    try:
+        PObj = Personal(msg)
+        return PObj.reply
+    except:
+        return perconf.ERR_MSGS['INERR']
 
 
 if __name__ == "__main__":
