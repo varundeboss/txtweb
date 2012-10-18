@@ -2,7 +2,8 @@ import os, sys
 import personal_config as perconf
 from CustomError import AuthError, WelcomeError
 
-CUR_DIR = os.path.abspath('')
+#CUR_DIR = os.path.abspath('')
+CUR_DIR, handler = os.path.split(__file__)
 
 class Personal:
     def __init__(self,msg):
@@ -94,7 +95,9 @@ class Personal:
 
     def add_details(self):
         try:
+            print CUR_DIR
             pers_file = CUR_DIR + perconf.FILE_NAME_MAP['personalfile']
+            print "file :: ",pers_file
             if os.path.isfile(pers_file):
                 per_keywords = {}
                 fObj = open(pers_file,'r')
@@ -130,6 +133,7 @@ class Personal:
                 fObj.close()
                 self.reply = perconf.ERR_MSGS['UPSUC']
         except Exception,e:
+            print "Error : ",e
             self.reply = perconf.ERR_MSGS['ADDFAIL']
 
     def auth(self):

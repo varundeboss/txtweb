@@ -8,9 +8,9 @@ import os
 import sys
 
 PROJECT = "TXTWEB" 
-#project_dir, handler = os.path.split(__file__)
+project_dir, handler = os.path.split(__file__)
 
-PROJECT_PATH = os.path.abspath('').replace(PROJECT,'')
+PROJECT_PATH = project_di.replace(PROJECT,'')
 
 sys.path.append(PROJECT_PATH)
 sys.path.append(os.path.join(PROJECT_PATH, PROJECT))

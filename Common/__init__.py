@@ -13,8 +13,8 @@ import socket
 os.environ['TXTWEB_HOSTNAME'] = 'dev' #dev | prod 
 
 PROJECT = "Common"
-#project_dir, handler = os.path.split(__file__)
-PROJECT_PATH = os.path.abspath('').replace(PROJECT,'')
+project_dir, handler = os.path.split(__file__)
+PROJECT_PATH = project_dir.replace(PROJECT,'')
 
 sys.path.append(PROJECT_PATH)
 sys.path.append(os.path.join(PROJECT_PATH, PROJECT))
