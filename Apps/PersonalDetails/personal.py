@@ -28,6 +28,10 @@ class Personal:
             try:self.keyword = self.keyword_list[0]
             except:self.keyword = ""
             self.content = ""
+        else:
+            self.key = ""
+            self.keyword = ""
+            self.content = ""
         
         #import pdb;pdb.set_trace()
         pass_flag = True
@@ -166,7 +170,8 @@ def handle_personal(txtWebObj):
     try:
         PObj = Personal(txtWebObj.txtweb_msg)
         return PObj.reply
-    except:
+    except Exception,e:
+        print "INERR ::",e
         return perconf.ERR_MSGS['INERR']
 
 
