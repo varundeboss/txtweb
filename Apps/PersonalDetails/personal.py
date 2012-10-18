@@ -53,6 +53,8 @@ class Personal:
         elif self.key == "GET" and not self.keyword:
             self.reply = perconf.ERR_MSGS['GETERR']
             pass_flag = False
+        else:
+            self.reply = perconf.ERR_MSGS['WELCOME']
 
         #import pdb;pdb.set_trace()
         auth_stat = self.auth() 
