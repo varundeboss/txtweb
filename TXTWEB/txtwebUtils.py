@@ -9,8 +9,9 @@ import txtwebConf
 
 import os
 
-def import_app(post_url):
+def import_app(txtweb_msg):
     try:
+        '''
         app = txtwebConf.URL_APP_MAP.get(os.environ['TXTWEB_HOSTNAME'],{}).get(post_url,'').lower()
         if app:
             app_module = app + "." + app + "_handler"
@@ -21,9 +22,14 @@ def import_app(post_url):
         else:
             # Send error mail
             app_import = False
+        '''
+        if txtweb_msg and txtweb_msg.split(' ')[0].upper() in txtwebConf.KEY_APP_MAP.keys():
+            mod_dict = txtwebConf.KEY_APP_MAP[txtweb_msg.split(' ')[0].upper()]
+            return getattr(__import__(mod_dict['mod'], fromlist=['']), mod_dict['func'])
+        else:
+            return False
     except Exception,e:
         # Send error mail
-        app_import = False
+        return False
     
-    return app_import
         

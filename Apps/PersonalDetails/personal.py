@@ -50,8 +50,8 @@ class Personal:
             pass_flag = False
 
         #import pdb;pdb.set_trace()
-        #auth_stat = self.auth() 
-        auth_stat = True
+        auth_stat = self.auth() 
+        #auth_stat = True
         if auth_stat and pass_flag:
             if str(self.key).upper() == "ADD":
                 self.add_details()
@@ -158,9 +158,9 @@ class Personal:
             pass
         return True
 
-def handle_personal(msg):
+def handle_personal(txtWebObj):
     try:
-        PObj = Personal(msg)
+        PObj = Personal(txtWebObj.txtweb_msg)
         return PObj.reply
     except:
         return perconf.ERR_MSGS['INERR']

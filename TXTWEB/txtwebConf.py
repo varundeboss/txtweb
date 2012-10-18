@@ -13,9 +13,14 @@ URL_APP_MAP = {
                         },
               }
 
+KEY_APP_MAP = {
+                "PRL" : {'mod':"Apps.PersonalDetails.personal", 'func':"handle_personal"}, 
+              }
+
 TXTWEB_PARAMS = {
                     'pub_key' : 'c5d909c0-9fba-4a27-8250-589bd55bcd13',
-                    'app_key' : 'b8a0e901-8ef6-4beb-bb7c-90536c887b76',
+                    #'app_key' : 'b8a0e901-8ef6-4beb-bb7c-90536c887b76', # @mymap
+                    'app_key' : 'd6a6ea84-9871-4593-966e-83eec0526a3c', # @varundeboss
                 }
 
 TXTWEB_OUT_MSG = """<html><head><title>txtWeb Message</title><meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /><meta name='txtweb-appkey' content='%(txtweb-appkey)s' /></head><body>%(txtweb-message-body)s</body></html>"""

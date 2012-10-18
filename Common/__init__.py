@@ -13,12 +13,13 @@ import socket
 os.environ['TXTWEB_HOSTNAME'] = 'dev' #dev | prod 
 
 PROJECT = "Common"
-project_dir, handler = os.path.split(__file__)
+#project_dir, handler = os.path.split(__file__)
+PROJECT_PATH = os.path.abspath('').replace(PROJECT,'')
 
-PROJECT_PATH = project_dir.replace(PROJECT,'')
 sys.path.append(PROJECT_PATH)
 sys.path.append(os.path.join(PROJECT_PATH, PROJECT))
 sys.path.append(os.path.join(PROJECT_PATH, "libs"))
+sys.path.append(os.path.join(PROJECT_PATH, "Apps"))
 
 
 # Setting python egg cache and timezone

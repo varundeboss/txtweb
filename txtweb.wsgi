@@ -9,20 +9,25 @@ from TXTWEB.txtweb_handler import process_txtweb_request
  
 def handler(req, start_response):
     if req['REQUEST_METHOD'] == 'GET':
-        response = """<html><head><title>Service Message</title></head>\
-                    <body>Please Send txtWeb incoming message details Request via HTTP POST</body></html>"""
-        response_headers = [('Content-type', 'text/html'),
-                            ('Content-Length', str(len(response)))]
-        status = "200 OK"
-        start_response(status, response_headers)
-        print req
-        return [response]
+        try:
+            request = req['QUERY_STRING']
+            #request = req['wsgi.input'].read(int(req['CONTENT_LENGTH']))
+            #post_url = req.get('SERVER_ADDR','') + req.get('REQUEST_URI','')
+            print request
+            response = process_txtweb_request(request)
+            print response
+            response_headers = [('Content-type', 'text/xml'), ('Content-Length', str(len(response)))]
+            status = "200 OK"
+            start_response(status, response_headers)
+            return [response]
+        except Exception, e:
+            raise
     elif req['REQUEST_METHOD'] == 'POST':
         try:
             request = req['wsgi.input'].read(int(req['CONTENT_LENGTH']))
-            post_url = req.get('SERVER_ADDR','') + req.get('REQUEST_URI','')
+            #post_url = req.get('SERVER_ADDR','') + req.get('REQUEST_URI','')
             print request
-            response = process_txtweb_request(request,post_url)
+            response = process_txtweb_request(request)
             print response
             response_headers = [('Content-type', 'text/xml'), ('Content-Length', str(len(response)))]
             status = "200 OK"
