@@ -4,7 +4,7 @@ Created on Sep 6, 2012
 @author: varun
 '''
 
-WAY2SMSFLAG = True
+WAY2SMSFLAG = False
 
 URL_APP_MAP = {
                'dev' : {
