@@ -16,11 +16,12 @@ PROJECT = "Common"
 project_dir, handler = os.path.split(__file__)
 PROJECT_PATH = project_dir.replace(PROJECT,'')
 
+PROJECT_LIST = ["libs","Apps","Smsout"]
+PROJECT_LIST.append(PROJECT)
+
 sys.path.append(PROJECT_PATH)
-sys.path.append(os.path.join(PROJECT_PATH, PROJECT))
-sys.path.append(os.path.join(PROJECT_PATH, "libs"))
-sys.path.append(os.path.join(PROJECT_PATH, "Apps"))
-sys.path.append(os.path.join(PROJECT_PATH, "Smsout"))
+for PROJ in PROJECT_LIST:
+    sys.path.append(os.path.join(PROJECT_PATH, PROJ))
 
 
 # Setting python egg cache and timezone
