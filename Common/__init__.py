@@ -20,6 +20,7 @@ sys.path.append(PROJECT_PATH)
 sys.path.append(os.path.join(PROJECT_PATH, PROJECT))
 sys.path.append(os.path.join(PROJECT_PATH, "libs"))
 sys.path.append(os.path.join(PROJECT_PATH, "Apps"))
+sys.path.append(os.path.join(PROJECT_PATH, "Smsout"))
 
 
 # Setting python egg cache and timezone

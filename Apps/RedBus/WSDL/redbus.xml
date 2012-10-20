@@ -1,0 +1,985 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.redbus.in/WS2/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://www.redbus.in/WS2/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  </wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.redbus.in/WS2/">
+      <s:element name="GetAvailableRoutes">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="authentication" type="tns:Authentication" />
+            <s:element minOccurs="1" maxOccurs="1" name="SourceID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="DestinationID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="DateOfJourney" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Authentication">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="LoginID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetAvailableRoutesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAvailableRoutesResult" type="tns:RouteList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RouteList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Response" type="tns:Response" />
+          <s:element minOccurs="0" maxOccurs="1" name="Routes" type="tns:ArrayOfRoute" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Response">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="responseType" type="tns:ResponseType" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsSuccess" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="ResponseCode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ResponseMessage" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Suggestion" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="ResponseType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Error" />
+          <s:enumeration value="Warring" />
+          <s:enumeration value="Information" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfRoute">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Route" nillable="true" type="tns:Route" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Route">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="RouteID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TravelsName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BusType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DepartureTime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ArrivalTime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BPPrims" type="tns:ArrayOfBPPrim" />
+          <s:element minOccurs="0" maxOccurs="1" name="DPPrims" type="tns:ArrayOfDPPrim" />
+          <s:element minOccurs="0" maxOccurs="1" name="RouteSeatTypeDetail" type="tns:ArrayOfRouteSeatTypeDetails" />
+          <s:element minOccurs="0" maxOccurs="1" name="CancellationPolicys" type="tns:CancellationPolicy" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfBPPrim">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BPPrim" nillable="true" type="tns:BPPrim" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BPPrim">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="BPLocation" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="BPTime" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfDPPrim">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="DPPrim" nillable="true" type="tns:DPPrim" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="DPPrim">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DPLocation" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DPTime" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfRouteSeatTypeDetails">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="RouteSeatTypeDetails" nillable="true" type="tns:RouteSeatTypeDetails" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="RouteSeatTypeDetails">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="busCondition" type="tns:BusCondition" />
+          <s:element minOccurs="1" maxOccurs="1" name="seatType" type="tns:SeatType" />
+          <s:element minOccurs="1" maxOccurs="1" name="seatTypeSpecific" type="tns:SeatTypeSpecific" />
+          <s:element minOccurs="1" maxOccurs="1" name="availabilityStatus" type="tns:AvailabilityStatus" />
+          <s:element minOccurs="1" maxOccurs="1" name="SeatsAvailable" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="BookingToStart" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="SellFare" type="s:float" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="BusCondition">
+        <s:restriction base="s:string">
+          <s:enumeration value="AC" />
+          <s:enumeration value="NonAC" />
+          <s:enumeration value="ACCumNonAC" />
+          <s:enumeration value="ANY" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="SeatType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Seat" />
+          <s:enumeration value="Sleeper" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="SeatTypeSpecific">
+        <s:restriction base="s:string">
+          <s:enumeration value="Seat" />
+          <s:enumeration value="ExecutivSeat" />
+          <s:enumeration value="LB" />
+          <s:enumeration value="UB" />
+          <s:enumeration value="SB" />
+          <s:enumeration value="DB" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="AvailabilityStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="Available" />
+          <s:enumeration value="OnRequest" />
+          <s:enumeration value="SoldOut" />
+          <s:enumeration value="BookingToStart" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="CancellationPolicy">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="IsCancellable" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="CancellationCharges" type="tns:ArrayOfCancellationCharge" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCancellationCharge">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CancellationCharge" nillable="true" type="tns:CancellationCharge" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CancellationCharge">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="TimeBeforeDept" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="CancellationChargeFixed" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="CancellationChargePer" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetSeatLayout">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="authentication" type="tns:Authentication" />
+            <s:element minOccurs="1" maxOccurs="1" name="RouteID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="DateOfJourney" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSeatLayoutResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSeatLayoutResult" type="tns:SeatLayout" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SeatLayout">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Response" type="tns:Response" />
+          <s:element minOccurs="0" maxOccurs="1" name="HtmlLayout" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SeatLayoutSTR" type="tns:SeatLayoutSTR" />
+          <s:element minOccurs="0" maxOccurs="1" name="SeatsAvailable" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OptionalParameters" type="tns:ArrayOfOptionalParams" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SeatLayoutSTR">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="TotalNoofRows" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalNoofColumns" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Gaps" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Legend" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SeatDetail" type="tns:ArrayOfSeatDetails" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSeatDetails">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SeatDetails" nillable="true" type="tns:SeatDetails" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SeatDetails">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SeatName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SeatType" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RowNo" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ColumnNo" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Width" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Height" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SeatStatus" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SeatFare" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOptionalParams">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OptionalParams" nillable="true" type="tns:OptionalParams" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OptionalParams">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Key" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Value" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetNewSeatLayout">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="authentication" type="tns:Authentication" />
+            <s:element minOccurs="1" maxOccurs="1" name="RouteID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="DateOfJourney" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNewSeatLayoutResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetNewSeatLayoutResult" type="tns:WSSeatLayoutVO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="WSSeatLayoutVO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Response" type="tns:Response" />
+          <s:element minOccurs="0" maxOccurs="1" name="BoardingPointList" type="tns:ArrayOfWSBPDPInformationVO" />
+          <s:element minOccurs="0" maxOccurs="1" name="DropoffPointList" type="tns:ArrayOfWSBPDPInformationVO" />
+          <s:element minOccurs="0" maxOccurs="1" name="Seatlist" type="tns:ArrayOfSeatVO" />
+          <s:element minOccurs="1" maxOccurs="1" name="ArrTime" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="BusType" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DateOfJourney" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="DepTime" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="FromCity" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="FromCityId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MaxLowerColumns" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MaxLowerRows" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MaxUpperColumns" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MaxUpperRows" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="OperatorId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="RouteId" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="ToCity" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ToCityId" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Travels" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OptionalParameters" type="tns:ArrayOfOptionalParams" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfWSBPDPInformationVO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WSBPDPInformationVO" nillable="true" type="tns:WSBPDPInformationVO" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WSBPDPInformationVO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Address" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactNo" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Landmark" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Location" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Time" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSeatVO">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SeatVO" nillable="true" type="tns:SeatVO" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SeatVO">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Fare" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Height" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Id" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsAvailable" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsLadies" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Width" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="X" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Y" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Z" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetBoardingPoints">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="authentication" type="tns:Authentication" />
+            <s:element minOccurs="1" maxOccurs="1" name="RouteID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="DateOfJourney" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBoardingPointsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBoardingPointsResult" type="tns:BoardingPointList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="BoardingPointList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Response" type="tns:Response" />
+          <s:element minOccurs="1" maxOccurs="1" name="NoOfBPs" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="BPDetails" type="tns:ArrayOfBPDetails" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfBPDetails">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BPDetails" nillable="true" type="tns:BPDetails" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BPDetails">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="BPName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="BPTime" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="BPAddress" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BPContactNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BPLocation" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BPLandmark" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DoTentativeBooking">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="authentication" type="tns:Authentication" />
+            <s:element minOccurs="0" maxOccurs="1" name="tentiveBookingInput" type="tns:TentativeBookingInput" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="TentativeBookingInput">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="RouteID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="BlockDuration" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="DateOfJourney" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NoOfSeats" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="SeatsSelected" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="BoardingPointName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PassengerDetails" type="tns:PassengerDetails" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PassengerDetails">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Title" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Gender" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FirstName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Age" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mobile" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Contact2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DoTentativeBookingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DoTentativeBookingResult" type="tns:TentativeBookingResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="TentativeBookingResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Response" type="tns:Response" />
+          <s:element minOccurs="1" maxOccurs="1" name="TentativeBookingReferenceNo" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="BlockDuration" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tempticket" type="tns:TempTicket" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TempTicket">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TktDetails_html" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TicketDetails" type="tns:TicketDetails" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TicketDetails">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="rBTicketStatus" type="tns:TicketStatus" />
+          <s:element minOccurs="0" maxOccurs="1" name="TravelOperatorPNR" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RBTicketNo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Source" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Destination" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DateOfJourney" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NoofPassengers" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="SeatNames" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="DepartureTime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Travels" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BusType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BPDetails" type="tns:BPDetails" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalFare" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="PassengerDetails" type="tns:PassengerDetails" />
+          <s:element minOccurs="0" maxOccurs="1" name="RBHelpLine" type="tns:RBHelpLine" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="TicketStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="TENTATIVE" />
+          <s:enumeration value="CONFIRMED" />
+          <s:enumeration value="CANCELLED" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="RBHelpLine">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RBCallCenters" type="tns:ArrayOfRBCallCenter" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfRBCallCenter">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="RBCallCenter" nillable="true" type="tns:RBCallCenter" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="RBCallCenter">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ContactAddress" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Location" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactNumber" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DoTentativeBookingForMultiPassenger">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="authentication" type="tns:Authentication" />
+            <s:element minOccurs="0" maxOccurs="1" name="tentiveBookingInput" type="tns:TentativeBookingInputMultiPass" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="TentativeBookingInputMultiPass">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="RouteID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="BlockDuration" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="DateOfJourney" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NoOfSeats" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="SeatsSelected" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="BoardingPointName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="passengerDetailsList" type="tns:ArrayOfPassengerDetailsList" />
+          <s:element minOccurs="1" maxOccurs="1" name="CustomerAddress" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfPassengerDetailsList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PassengerDetailsList" nillable="true" type="tns:PassengerDetailsList" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PassengerDetailsList">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Age" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Contact2" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FirstName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Gender" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="IdProofInfo" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IdProofType" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mobile" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SeatNo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Title" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IssueingAuthority" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DoTentativeBookingForMultiPassengerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DoTentativeBookingForMultiPassengerResult" type="tns:TentativeBookingResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelTentativeBooking">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="authentication" type="tns:Authentication" />
+            <s:element minOccurs="1" maxOccurs="1" name="TentaiveBookingReferenceNo" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelTentativeBookingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CancelTentativeBookingResult" type="tns:CancelTentativeResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CancelTentativeResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Response" type="tns:Response" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsTentativeBookingCancelled" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReferenceNumber" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ConfirmTicket">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="authentication" type="tns:Authentication" />
+            <s:element minOccurs="0" maxOccurs="1" name="confirmBookingInput" type="tns:ConfirmBookingInput" />
+            <s:element minOccurs="0" maxOccurs="1" name="clTxDetails" type="tns:ClientTxDetails" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ConfirmBookingInput">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="TentaiveBookingReferenceNo" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalFare" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ClientTxDetails">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ClientParam" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClientRefNo" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ConfirmTicketResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ConfirmTicketResult" type="tns:ConfirmTicketDetails" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ConfirmTicketDetails">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Response" type="tns:Response" />
+          <s:element minOccurs="0" maxOccurs="1" name="TktDetails_html" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TicketDetails" type="tns:TicketDetails" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="TicketRequest">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="authentication" type="tns:Authentication" />
+            <s:element minOccurs="0" maxOccurs="1" name="ticketRequest" type="tns:TicketRequestInput" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="TicketRequestInput">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="RouteID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="DateOfJourney" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NoOfSeats" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Comments" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerDetails" type="tns:CustomerDetails" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CustomerDetails">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mobile" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Contact2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="EMail" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="TicketRequestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TicketRequestResult" type="tns:RequestResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RequestResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Response" type="tns:Response" />
+          <s:element minOccurs="0" maxOccurs="1" name="RequestRefNo" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetDroppingPoints">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="authentication" type="tns:Authentication" />
+            <s:element minOccurs="1" maxOccurs="1" name="RouteID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="DateOfJourney" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDroppingPointsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDroppingPointsResult" type="tns:DroppingPointList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DroppingPointList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Response" type="tns:Response" />
+          <s:element minOccurs="1" maxOccurs="1" name="NoOfDPs" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="DPDetails" type="tns:ArrayOfDPDetails" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfDPDetails">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="DPDetails" nillable="true" type="tns:DPDetails" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="DPDetails">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DPName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DPTime" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="DPAddress" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DPLocation" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DPLandmark" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetRouteDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="authentication" type="tns:Authentication" />
+            <s:element minOccurs="1" maxOccurs="1" name="RouteId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="DateOfJourney" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="PartnerId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRouteDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetRouteDetailsResult" type="tns:RouteDetails" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RouteDetails">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Response" type="tns:Response" />
+          <s:element minOccurs="1" maxOccurs="1" name="SourceId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="DestinationId" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Source" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Destination" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RouteID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TravelsName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BusType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DepartureTime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ArrivalTime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Fare" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetAvailableRoutesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAvailableRoutes" />
+  </wsdl:message>
+  <wsdl:message name="GetAvailableRoutesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAvailableRoutesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSeatLayoutSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSeatLayout" />
+  </wsdl:message>
+  <wsdl:message name="GetSeatLayoutSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSeatLayoutResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetNewSeatLayoutSoapIn">
+    <wsdl:part name="parameters" element="tns:GetNewSeatLayout" />
+  </wsdl:message>
+  <wsdl:message name="GetNewSeatLayoutSoapOut">
+    <wsdl:part name="parameters" element="tns:GetNewSeatLayoutResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBoardingPointsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBoardingPoints" />
+  </wsdl:message>
+  <wsdl:message name="GetBoardingPointsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBoardingPointsResponse" />
+  </wsdl:message>
+  <wsdl:message name="DoTentativeBookingSoapIn">
+    <wsdl:part name="parameters" element="tns:DoTentativeBooking" />
+  </wsdl:message>
+  <wsdl:message name="DoTentativeBookingSoapOut">
+    <wsdl:part name="parameters" element="tns:DoTentativeBookingResponse" />
+  </wsdl:message>
+  <wsdl:message name="DoTentativeBookingForMultiPassengerSoapIn">
+    <wsdl:part name="parameters" element="tns:DoTentativeBookingForMultiPassenger" />
+  </wsdl:message>
+  <wsdl:message name="DoTentativeBookingForMultiPassengerSoapOut">
+    <wsdl:part name="parameters" element="tns:DoTentativeBookingForMultiPassengerResponse" />
+  </wsdl:message>
+  <wsdl:message name="CancelTentativeBookingSoapIn">
+    <wsdl:part name="parameters" element="tns:CancelTentativeBooking" />
+  </wsdl:message>
+  <wsdl:message name="CancelTentativeBookingSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelTentativeBookingResponse" />
+  </wsdl:message>
+  <wsdl:message name="ConfirmTicketSoapIn">
+    <wsdl:part name="parameters" element="tns:ConfirmTicket" />
+  </wsdl:message>
+  <wsdl:message name="ConfirmTicketSoapOut">
+    <wsdl:part name="parameters" element="tns:ConfirmTicketResponse" />
+  </wsdl:message>
+  <wsdl:message name="TicketRequestSoapIn">
+    <wsdl:part name="parameters" element="tns:TicketRequest" />
+  </wsdl:message>
+  <wsdl:message name="TicketRequestSoapOut">
+    <wsdl:part name="parameters" element="tns:TicketRequestResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDroppingPointsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDroppingPoints" />
+  </wsdl:message>
+  <wsdl:message name="GetDroppingPointsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDroppingPointsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetRouteDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRouteDetails" />
+  </wsdl:message>
+  <wsdl:message name="GetRouteDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRouteDetailsResponse" />
+  </wsdl:message>
+  <wsdl:portType name="Booking_x0020_ServiceSoap">
+    <wsdl:operation name="GetAvailableRoutes">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">API to give the list of routes going from the specified source city to the destination city and seats available on the specified date.</wsdl:documentation>
+      <wsdl:input message="tns:GetAvailableRoutesSoapIn" />
+      <wsdl:output message="tns:GetAvailableRoutesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSeatLayout">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">API to give the seat layout for the specified route</wsdl:documentation>
+      <wsdl:input message="tns:GetSeatLayoutSoapIn" />
+      <wsdl:output message="tns:GetSeatLayoutSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNewSeatLayout">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">API to give the new seat layout for the specified route</wsdl:documentation>
+      <wsdl:input message="tns:GetNewSeatLayoutSoapIn" />
+      <wsdl:output message="tns:GetNewSeatLayoutSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBoardingPoints">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">API to give the list of boarding points , times,lcation,address,contactnumber and location for the specified route</wsdl:documentation>
+      <wsdl:input message="tns:GetBoardingPointsSoapIn" />
+      <wsdl:output message="tns:GetBoardingPointsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DoTentativeBooking">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">API to book a ticket tentatively.This ticket may be confirmed after the payment is made. Here the seats are blocked only for a specified time after which then cannot be confirmed.</wsdl:documentation>
+      <wsdl:input message="tns:DoTentativeBookingSoapIn" />
+      <wsdl:output message="tns:DoTentativeBookingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DoTentativeBookingV2">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">API to book a ticket tentatively.This ticket may be confirmed after the payment is made. Here the seats are blocked only for a specified time after which then cannot be confirmed.</wsdl:documentation>
+      <wsdl:input name="DoTentativeBookingForMultiPassenger" message="tns:DoTentativeBookingForMultiPassengerSoapIn" />
+      <wsdl:output name="DoTentativeBookingForMultiPassenger" message="tns:DoTentativeBookingForMultiPassengerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelTentativeBooking">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">API to cancel the given tentative booking reference number.</wsdl:documentation>
+      <wsdl:input message="tns:CancelTentativeBookingSoapIn" />
+      <wsdl:output message="tns:CancelTentativeBookingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmTicket">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">API to give confirm the tentatively booked ticket</wsdl:documentation>
+      <wsdl:input message="tns:ConfirmTicketSoapIn" />
+      <wsdl:output message="tns:ConfirmTicketSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="TicketRequest">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">API to take ticket request for the specified route and DateofJourney</wsdl:documentation>
+      <wsdl:input message="tns:TicketRequestSoapIn" />
+      <wsdl:output message="tns:TicketRequestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDroppingPoints">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">API to give the list of dropping points , times,lcation,address,contactnumber and location for the specified route</wsdl:documentation>
+      <wsdl:input message="tns:GetDroppingPointsSoapIn" />
+      <wsdl:output message="tns:GetDroppingPointsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRouteDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">API to give the route details for the specified route</wsdl:documentation>
+      <wsdl:input message="tns:GetRouteDetailsSoapIn" />
+      <wsdl:output message="tns:GetRouteDetailsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Booking_x0020_ServiceSoap" type="tns:Booking_x0020_ServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetAvailableRoutes">
+      <soap:operation soapAction="http://www.redbus.in/WS2/GetAvailableRoutes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSeatLayout">
+      <soap:operation soapAction="http://www.redbus.in/WS2/GetSeatLayout" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNewSeatLayout">
+      <soap:operation soapAction="http://www.redbus.in/WS2/GetNewSeatLayout" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBoardingPoints">
+      <soap:operation soapAction="http://www.redbus.in/WS2/GetBoardingPoints" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoTentativeBooking">
+      <soap:operation soapAction="http://www.redbus.in/WS2/DoTentativeBooking" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoTentativeBookingV2">
+      <soap:operation soapAction="http://www.redbus.in/WS2/DoTentativeBookingForMultiPassenger" style="document" />
+      <wsdl:input name="DoTentativeBookingForMultiPassenger">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="DoTentativeBookingForMultiPassenger">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelTentativeBooking">
+      <soap:operation soapAction="http://www.redbus.in/WS2/CancelTentativeBooking" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmTicket">
+      <soap:operation soapAction="http://www.redbus.in/WS2/ConfirmTicket" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TicketRequest">
+      <soap:operation soapAction="http://www.redbus.in/WS2/TicketRequest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDroppingPoints">
+      <soap:operation soapAction="http://www.redbus.in/WS2/GetDroppingPoints" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRouteDetails">
+      <soap:operation soapAction="http://www.redbus.in/WS2/GetRouteDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Booking_x0020_ServiceSoap12" type="tns:Booking_x0020_ServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetAvailableRoutes">
+      <soap12:operation soapAction="http://www.redbus.in/WS2/GetAvailableRoutes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSeatLayout">
+      <soap12:operation soapAction="http://www.redbus.in/WS2/GetSeatLayout" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNewSeatLayout">
+      <soap12:operation soapAction="http://www.redbus.in/WS2/GetNewSeatLayout" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBoardingPoints">
+      <soap12:operation soapAction="http://www.redbus.in/WS2/GetBoardingPoints" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoTentativeBooking">
+      <soap12:operation soapAction="http://www.redbus.in/WS2/DoTentativeBooking" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoTentativeBookingV2">
+      <soap12:operation soapAction="http://www.redbus.in/WS2/DoTentativeBookingForMultiPassenger" style="document" />
+      <wsdl:input name="DoTentativeBookingForMultiPassenger">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="DoTentativeBookingForMultiPassenger">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelTentativeBooking">
+      <soap12:operation soapAction="http://www.redbus.in/WS2/CancelTentativeBooking" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmTicket">
+      <soap12:operation soapAction="http://www.redbus.in/WS2/ConfirmTicket" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TicketRequest">
+      <soap12:operation soapAction="http://www.redbus.in/WS2/TicketRequest" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDroppingPoints">
+      <soap12:operation soapAction="http://www.redbus.in/WS2/GetDroppingPoints" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRouteDetails">
+      <soap12:operation soapAction="http://www.redbus.in/WS2/GetRouteDetails" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Booking_x0020_Service">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    </wsdl:documentation>
+    <wsdl:port name="Booking_x0020_ServiceSoap" binding="tns:Booking_x0020_ServiceSoap">
+      <soap:address location="http://www.redbus.in/WS2/BookingService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="Booking_x0020_ServiceSoap12" binding="tns:Booking_x0020_ServiceSoap12">
+      <soap12:address location="http://www.redbus.in/WS2/BookingService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

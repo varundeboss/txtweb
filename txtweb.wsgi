@@ -5,6 +5,8 @@ import os
 project_dir, handler = os.path.split(__file__)
 sys.path.append(project_dir)
 
+import Common
+
 from TXTWEB.txtweb_handler import process_txtweb_request
  
 def handler(req, start_response):
