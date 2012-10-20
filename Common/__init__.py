@@ -29,4 +29,4 @@ os.environ['PYTHON_EGG_CACHE'] = "/tmp"
 os.environ['TZ'] = "Asia/Kolkata"
 time.tzset()
 
-HOSTNAME = socket.gethostname()
+#HOSTNAME = socket.gethostname()
