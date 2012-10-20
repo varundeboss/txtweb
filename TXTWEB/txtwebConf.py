@@ -4,6 +4,8 @@ Created on Sep 6, 2012
 @author: varun
 '''
 
+WAY2SMSFLAG = True
+
 URL_APP_MAP = {
                'dev' : {
                           "10.27.218.247/mymap" : "mymap",

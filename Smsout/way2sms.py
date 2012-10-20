@@ -59,7 +59,7 @@ class WayToSms:
         self.br.open("http://site1.way2sms.com/jsp/logout.jsp")
         self.br.close()
 
-def main(sms_list):
+def send_way2sms(sms_list):
     try:
         Obj = WayToSms()
         Obj.LogIn()
@@ -76,4 +76,4 @@ if __name__ == "__main__":
                 {'mobile':'8870435477', 'text':'test 2'},
                 {'mobile':'8870435477', 'text':'test 3'},
                ]
-    print main(sms_list)
+    print send_way2sms(sms_list)

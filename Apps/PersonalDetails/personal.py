@@ -57,8 +57,8 @@ class Personal:
             self.reply = perconf.ERR_MSGS['WELCOME']
 
         #import pdb;pdb.set_trace()
-        auth_stat = self.auth() 
-        #auth_stat = True
+        #auth_stat = self.auth() 
+        auth_stat = True
         if auth_stat and pass_flag:
             if str(self.key).upper() == "ADD":
                 self.add_details()

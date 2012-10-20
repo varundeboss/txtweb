@@ -9,6 +9,8 @@ from txtweb import txtWeb
 import txtwebUtils
 import txtwebConf
 
+from Smsout.way2sms import send_way2sms
+
 import sys
 import urllib, urllib2, urlparse
 
@@ -38,6 +40,11 @@ def process_txtweb_request(querystring):
         
         #print "txtWeb Resp :: ",txtweb_resp,"\n"
         txtWebObj.put_out_db()
+        
+        if txtwebConf.WAY2SMSFLAG:
+            sms_list = [{'mobile':'8870435477', 'text':app_resp}]
+            send_way2sms(sms_list)
+            return "SUCCESS"
         return txtweb_out_msg
     except Exception,e:
         # Send error mail and log
