@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 
-import os
+import os,sys
 from datetime import datetime
 
-import pdb;pdb.set_trace()
-
-print os.path.dirname(__file__)
-
 PROJECT = "AppBuilder"
-project_dir, handler = os.path.split(__file__)
-PROJECT_PATH = project_dir.replace(PROJECT,'')
+project_dir = os.path.abspath(__file__)
+PROJECT_PATH = project_dir.replace(PROJECT+"/"+__file__.split("/")[-1],'')
 
 APPS_PATH = os.path.join(PROJECT_PATH, "Apps")
 
