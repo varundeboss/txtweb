@@ -6,6 +6,8 @@ Created on Sep 6, 2012
 
 WAY2SMSFLAG = False
 
+TXTWEB_KEYWORD = "mymap"
+
 URL_APP_MAP = {
                'dev' : {
                           "10.27.218.247/mymap" : "mymap",
@@ -15,9 +17,12 @@ URL_APP_MAP = {
                         },
               }
 
+# Add the project and the function handling the txtWebObj object
 KEY_APP_MAP = {
-                "PRL" : {'mod':"Apps.PersonalDetails.personal", 'func':"handle_personal"}, 
+                "PRL" : {'mod':"Apps.PersonalDetails.personal", 'func':"handle_personal", "desc":"personal"}, 
               }
+
+APPS = ','.join(KEY_APP_MAP.keys())
 
 TXTWEB_PARAMS = {
                     'pub_key' : 'c5d909c0-9fba-4a27-8250-589bd55bcd13',
@@ -28,8 +33,10 @@ TXTWEB_PARAMS = {
 TXTWEB_OUT_MSG = """<html><head><title>txtWeb Message</title><meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /><meta name='txtweb-appkey' content='%(txtweb-appkey)s' /></head><body>%(txtweb-message-body)s</body></html>"""
 
 DEF_ERR = {
-               "app_err" : "Thanks for trying out our App. We are in beta mode. Please try back after sometimes. Sorry for the inconvenience caused.",
-               "txtweb_url_err" : """<?xml version="1.0"?><txtWeb>\n  <status>\n    <code>-999</code>\n    <message>Error while posting outbound SMS to txtweb</message>\n  </status>\n</txtWeb>\n""",               
+            "welcome" : "Welcome to the All-In-One App. Send @%(txtweb_key)s appname for usage. Available appname(s) : %(apps)s"%{'txtweb_key':TXTWEB_KEYWORD,'apps':APPS},
+            "app_not_found" : "The App name entered is invalid. Please try one of the following appname(s): %(apps)s"%{'apps':APPS},
+            "app_err" : "Thanks for trying out our App. We are in beta mode. Please try back after sometimes. Sorry for the inconvenience caused.",
+            "txtweb_url_err" : """<?xml version="1.0"?><txtWeb>\n  <status>\n    <code>-999</code>\n    <message>Error while posting outbound SMS to txtweb</message>\n  </status>\n</txtWeb>\n""",               
           }
 
 TXTWEB_URL_MAP = {

@@ -25,7 +25,7 @@ class txtWeb():
         self.txtweb_id        = self.txtweb_req['txtweb-id']
         self.txtweb_vid       = self.txtweb_req['txtweb-verifyid']
         self.txtweb_mobile    = self.txtweb_req.get('txtweb-mobile','')
-        self.txtweb_msg       = self.txtweb_req['txtweb-message']
+        self.txtweb_msg       = self.txtweb_req.get('txtweb-message','')
         self.txtweb_protocol  = self.txtweb_req['txtweb-protocol']
         self.txtweb_pubkey    = txtwebConf.TXTWEB_PARAMS['pub_key']
         self.txtweb_appkey    = txtwebConf.TXTWEB_PARAMS['app_key']
