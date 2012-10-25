@@ -1,4 +1,5 @@
 import webapp2
+from google.appengine.api import rdbms
 
 import urllib
 
@@ -13,6 +14,8 @@ import Common
 from TXTWEB.txtweb_handler import process_txtweb_request
 
 class MainPage(webapp2.RequestHandler):
+    #import pdb;pdb.set_trace()
+    #conn = rdbms.connect(instance='varunthyboss:varunthyboss', database='TXTWEB', **{'user':'varundeboss', 'password':'vArundebo0s', 'charset':'utf8'})
     def get(self):
         request = urllib.urlencode(getattr(self.request,self.request.method))
         print request

@@ -10,7 +10,9 @@ import sys
 import time
 import socket
 
-os.environ['TXTWEB_HOSTNAME'] = 'dev' #dev | prod 
+#os.environ['TXTWEB_HOSTNAME'] = 'dev' #dev | prod 
+TXTWEB_HOSTNAME = 'dev' #dev | prod 
+
 
 PROJECT = "Common"
 

@@ -11,8 +11,11 @@ import txtwebConf
 
 from Smsout.way2sms import send_way2sms
 
+from Common.utils.MailUtil import send_mail
+
 import sys
 import urllib, urllib2, urlparse
+import traceback
 
 def process_txtweb_request(querystring):
     try:
@@ -21,22 +24,27 @@ def process_txtweb_request(querystring):
         txtWebObj = txtWeb(txtweb_req)
         
         txtWebObj.put_in_db()
+
+        #auth_stat, app_resp = txtWebObj.auth()
+        auth_stat = True
         
-        #app_module = txtwebUtils.import_app(post_url)        
-        in_msg = txtWebObj.txtweb_msg.strip()
-        app_module = txtwebUtils.import_app(in_msg) if in_msg else False
-        if app_module and in_msg:
-            try:
-                app_resp = app_module(txtWebObj)
-            except Exception, e:
+        if auth_stat:
+            #app_module = txtwebUtils.import_app(post_url)        
+            in_msg = txtWebObj.txtweb_msg.strip()
+            app_module = txtwebUtils.import_app(in_msg) if in_msg else False
+            if app_module and in_msg:
+                try:
+                    app_resp = app_module(txtWebObj)
+                except Exception, e:
+                    # Send error mail
+                    app_resp = txtwebConf.DEF_ERR['app_err']
+            elif not in_msg:
+                app_resp = txtwebConf.DEF_ERR['welcome']
+            else:
                 # Send error mail
-                app_resp = txtwebConf.DEF_ERR['app_err']
-        elif not in_msg:
-            app_resp = txtwebConf.DEF_ERR['welcome']
-        else:
-            # Send error mail
-            #app_resp = txtwebConf.DEF_ERR['app_err']
-            app_resp = txtwebConf.DEF_ERR['app_not_found']
+                #app_resp = txtwebConf.DEF_ERR['app_err']
+                app_resp = txtwebConf.DEF_ERR['app_not_found']
+        
         print "App Resp :: ",app_resp,"\n"
         
         txtweb_out_msg = txtWebObj.format_txtweb_out(app_resp)
@@ -52,7 +60,7 @@ def process_txtweb_request(querystring):
         return txtweb_out_msg
     except Exception,e:
         # Send error mail and log
-        print "TXTWEB Error : ",e
+        print "TXTWEB Error : ",traceback.format_exc()
         return txtwebConf.TXTWEB_OUT_MSG%{'txtweb-appkey':txtwebConf.TXTWEB_PARAMS['app_key'], 'txtweb-message-body':txtwebConf.DEF_ERR['app_err']}
 
 if __name__ == '__main__':
