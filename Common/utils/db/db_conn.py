@@ -1,7 +1,6 @@
-#from Common.utils.db.webpy.web import db
-from libs.mysql import connector
+from Common.utils.db.webpy.web import db
 from Common.config import MysqlConf
-from Common import TXTWEB_HOSTNAME
+from Common import TXTWEB_HOSTNAME, TXTWEB_MYSQL
 
 import os
 
@@ -9,15 +8,15 @@ _dbTXT = None
 
 def get_db(DB=None):
     global _dbTXT 
-    mysql_conf = MysqlConf.MYSQL_CONF[TXTWEB_HOSTNAME]
+    mysql_conf = MysqlConf.MYSQL_CONF[TXTWEB_MYSQL]
     if DB is 'TXW':
         if _dbTXT is None:
-            _dbTXT = connector.connect(
+            _dbTXT = db.database(
                         host=mysql_conf['MYSQL_HOST'], 
-                        #dbn = 'mysql', 
-                        database=MysqlConf.MYSQL_DB_MAP[DB], 
+                        dbn = 'mysql', 
+                        db=mysql_conf['DB'][DB], 
                         user=mysql_conf['MYSQL_USER'], 
-                        password=mysql_conf['MYSQL_PASS'],
+                        pw=mysql_conf['MYSQL_PASS'],
                     )
         return _dbTXT
 
