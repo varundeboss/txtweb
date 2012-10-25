@@ -5,7 +5,7 @@ Created on Sep 6, 2012
 '''
 
 import txtwebConf
-#from txtweb_models import check_auth
+import txtwebUtils
 
 import urllib, urllib2, urlparse
 
@@ -24,17 +24,17 @@ class txtWeb():
         '''        
         '''
         self.txtweb_req       = txtweb_req
-        self.txtweb_id        = self.txtweb_req['txtweb-id']
-        self.txtweb_vid       = self.txtweb_req['txtweb-verifyid']
+        self.txtweb_id        = self.txtweb_req.get('txtweb-id')
+        self.txtweb_vid       = self.txtweb_req.get('txtweb-verifyid')
         self.txtweb_mobile    = self.txtweb_req.get('txtweb-mobile','')
         self.txtweb_msg       = self.txtweb_req.get('txtweb-message','')
-        self.txtweb_protocol  = self.txtweb_req['txtweb-protocol']
+        self.txtweb_protocol  = self.txtweb_req.get('txtweb-protocol')
         self.txtweb_pubkey    = txtwebConf.TXTWEB_PARAMS['pub_key']
         self.txtweb_appkey    = txtwebConf.TXTWEB_PARAMS['app_key']
     
     def auth(self):
         try:
-            if check_auth(self):
+            if txtwebUtils.check_auth(self):
                 return "True", "Authenticated"
             txtweb_msg_list = self.txtweb_msg.strip().split(' ')
             if not self.txtweb_msg:

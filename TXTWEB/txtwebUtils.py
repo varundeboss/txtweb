@@ -7,6 +7,8 @@ Created on Sep 8, 2012
 import txtwebConf
 #from importlib import import_module
 
+from Common.utils.db.db_conn import get_db
+
 import os
 
 def import_app(txtweb_msg):
@@ -32,4 +34,8 @@ def import_app(txtweb_msg):
         # Send error mail
         return False
     
-        
+def check_auth(txtwebObj):
+    try:
+        data = get_db('TXW').query("show databases;").list()
+    except Exception,e:
+        pass
