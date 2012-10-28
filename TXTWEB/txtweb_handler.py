@@ -25,10 +25,10 @@ def process_txtweb_request(querystring):
         
         txtWebObj.put_in_db()
 
-        #auth_stat, app_resp = txtWebObj.auth()
-        auth_stat = True
+        #txtWebObj.auth_stat = True # Comment this before going live
+        app_resp = txtWebObj.app_resp
         
-        if auth_stat:
+        if txtWebObj.auth_stat:
             #app_module = txtwebUtils.import_app(post_url)        
             in_msg = txtWebObj.txtweb_msg.strip()
             app_module = txtwebUtils.import_app(in_msg) if in_msg else False
@@ -64,6 +64,6 @@ def process_txtweb_request(querystring):
         return txtwebConf.TXTWEB_OUT_MSG%{'txtweb-appkey':txtwebConf.TXTWEB_PARAMS['app_key'], 'txtweb-message-body':txtwebConf.DEF_ERR['app_err']}
 
 if __name__ == '__main__':
-    txtweb_inreq = "txtweb-message=prl 1 help&txtweb-id=3e79bbb1-3e3c-4bbb-b867-39ed7ddf546e&txtweb-verifyid=81907f5d4295f90bf581999b7d9bcc5c0e5b8a822f1f5b02378b14e544115cd61afe8135bd8751e99c394da39c7603122e70ba54a6508ea8be94d3f2e252d6c4e643b674bea450f4bbc43adc3a8538a6dc25bd2c62343e81f2a2c1afca026997ed39ff6f765a3b5f&txtweb-mobile=72a556c2-c3fd-4a9a-aff8-922452acb335&txtweb-aggid=10000&txtweb-protocol=1000"
+    txtweb_inreq = "txtweb-message=%(input)s&txtweb-id=3e79bbb1-3e3c-4bbb-b867-39ed7ddf546e&txtweb-verifyid=81907f5d4295f90bf581999b7d9bcc5c0e5b8a822f1f5b02378b14e544115cd61afe8135bd8751e99c394da39c7603122e70ba54a6508ea8be94d3f2e252d6c4e643b674bea450f4bbc43adc3a8538a6dc25bd2c62343e81f2a2c1afca026997ed39ff6f765a3b5f&txtweb-mobile=72a556c2-c3fd-4a9a-aff8-922452acb341&txtweb-aggid=10000&txtweb-protocol=1000"%{'input':' '.join(sys.argv[1:])}
     print process_txtweb_request(txtweb_inreq)
     #print urllib2.urlopen('http://localhost/mymap/',txtweb_inreq).read()

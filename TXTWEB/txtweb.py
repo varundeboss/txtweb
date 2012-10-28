@@ -30,25 +30,12 @@ class txtWeb():
         self.txtweb_msg       = self.txtweb_req.get('txtweb-message','')
         self.txtweb_protocol  = self.txtweb_req.get('txtweb-protocol')
         self.txtweb_pubkey    = txtwebConf.TXTWEB_PARAMS['pub_key']
-        self.txtweb_appkey    = txtwebConf.TXTWEB_PARAMS['app_key']
+        self.txtweb_appkey    = txtwebConf.TXTWEB_PARAMS['app_key'][txtwebConf.TXTWEB_KEYWORD.upper()]
+
+        self.auth_stat, self.app_resp = self.auth()
     
     def auth(self):
-        try:
-            if txtwebUtils.check_auth(self):
-                return "True", "Authenticated"
-            txtweb_msg_list = self.txtweb_msg.strip().split(' ')
-            if not self.txtweb_msg:
-                return False, ""
-            elif txtweb_msg_list[0].upper() == "REGISTER" and len(txtweb_msg_list) == 3: # Register or ask for login credentials
-                return False, ""
-            elif txtweb_msg_list[0].upper() == "LOGOUT" and len(txtweb_msg_list) == 3: # Logout if proper credentials
-                return False, ""
-            elif len(txtweb_msg_list) == 2: # Login if proper credentials
-                return False, ""
-            else:
-                return False, ""
-        except Exception,e:
-            pass
+        return txtwebUtils.check_auth(self)
     
     def put_in_db(self):
         try:

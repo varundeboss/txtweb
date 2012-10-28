@@ -11,8 +11,8 @@ import time
 import socket
 
 #os.environ['TXTWEB_HOSTNAME'] = 'dev' #dev | prod 
-TXTWEB_HOSTNAME = 'dev' #dev | prod 
-TXTWEB_MYSQL    = 'freemysql'
+TXTWEB_HOSTNAME = 'dev' # dev | prod 
+TXTWEB_MYSQL    = 'dev' # dev | freemysql
 
 PROJECT = "Common"
 
