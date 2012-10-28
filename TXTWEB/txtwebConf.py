@@ -40,7 +40,7 @@ TXTWEB_PARAMS = {
                     'app_key' : {
                                   "MYMAP" : 'b8a0e901-8ef6-4beb-bb7c-90536c887b76', # @mymap
                                   "VARUNDEBOSS" : 'd6a6ea84-9871-4593-966e-83eec0526a3c', # @varundeboss
-                                  "AIOA" : '', # @aioa
+                                  "AIOA" : '2c35525d-30a5-4fd4-9408-fa4ac5064a20', # @aioa
                                 }
                 }
 
