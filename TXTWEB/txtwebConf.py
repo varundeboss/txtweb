@@ -6,7 +6,7 @@ Created on Sep 6, 2012
 
 WAY2SMSFLAG = False
 
-TXTWEB_KEYWORD = "mymap"
+TXTWEB_KEYWORD = "aioa"
 TXTWEB_KEYWORD = TXTWEB_KEYWORD.upper()
 
 SESSION_TIME = 720

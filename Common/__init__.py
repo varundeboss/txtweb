@@ -12,7 +12,7 @@ import socket
 
 #os.environ['TXTWEB_HOSTNAME'] = 'dev' #dev | prod 
 TXTWEB_HOSTNAME = 'dev' # dev | prod 
-TXTWEB_MYSQL    = 'dev' # dev | freemysql
+TXTWEB_MYSQL    = 'pyanywr' # dev | freemysql | pyanywr
 
 PROJECT = "Common"
 
