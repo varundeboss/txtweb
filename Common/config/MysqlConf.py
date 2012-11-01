@@ -23,5 +23,11 @@ MYSQL_CONF = {
                             "MYSQL_PASS" : "vArundebo0s",
                             "DB"         : {'TXW':'varundeboss$TXTWEB'},
                           },
+              "sersfree" : {
+                            "MYSQL_HOST" : "mysql.serversfree.com",
+                            "MYSQL_USER" : "u868309719_varun",
+                            "MYSQL_PASS" : "vArundebo0s",
+                            "DB"         : {'TXW':'u868309719_txtweb'},
+                           },
              }
 

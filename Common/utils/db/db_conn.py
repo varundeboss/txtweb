@@ -17,6 +17,7 @@ def get_db(DB=None):
                         db=mysql_conf['DB'][DB], 
                         user=mysql_conf['MYSQL_USER'], 
                         pw=mysql_conf['MYSQL_PASS'],
+                        #pooling=True,
                     )
         return _dbTXT
 
