@@ -65,11 +65,12 @@ def gen_user_id():
 def gen_verify_id():
     return random.randrange(100000,1000000)
 
-def send_verify_id(firstname,email,verify_id):
+def send_verify_id(firstname,email,verify_id,username):
     try:
         subject = "%(keyword)s verification code"%{'keyword':txtwebConf.TXTWEB_KEYWORD.upper()}
         body = "Greetings %(firstname)s,\n\n\tThank you for choosing %(keyword)s.\n\n\tTo verify your account please send @%(keyword)s ver [username] [password] %(verifyid)s"%{'firstname':firstname, 'keyword':txtwebConf.TXTWEB_KEYWORD.upper(), 'verifyid':verify_id}
         send_mail(mail_config, txtwebConf.FROM_EMAIL, [email], subject, body,files=[])
+        get_db('TXW').update("cust_account", vars={'Username':username},where="Username=$Username",**{'EmailFlag':1})
         print "Verification code ",verify_id," sent to email ",email," successfully"
     except:
         print "Verification code ",verify_id," sent to email ",email," failed"
@@ -148,7 +149,7 @@ def register(txtwebObj):
                         }
         get_db('TXW').insert("cust_account",**register_dict)
         #Send verification ID in registered email
-        send_verify_id(options.firstname, options.email, verify_id)
+        send_verify_id(options.firstname, options.email, verify_id, options.username)
         return False, txtwebConf.AUTH_ERR['REG_SUC'] + txtwebConf.AUTH_ERR['VER_SENT']%{'email':options.email} # Registered successfully. Tell to verify
     except Exception,e:
         return False, txtwebConf.AUTH_ERR['REG_FAIL'] + txtwebConf.AUTH_ERR['REG_TMPL'] # Problem while registering. Send registration tmpl
@@ -184,7 +185,7 @@ def update_details(txtwebObj,log_info):
         if up_flag:
             if options.email and options.email != user_det[0]['Email']:
                 #Send verification ID in registered email
-                send_verify_id(log_info['Firstname'], options.email, verify_id)
+                send_verify_id(log_info['Firstname'], options.email, verify_id, log_info['Username'])
                 logout(log_info['Username'])
                 get_db('TXW').update("cust_account", vars={'Username':log_info['Username']},where="Username=$Username",**{'VerifyFlag':'0',"UpdatedOn":datetime.now()})
                 return False, txtwebConf.AUTH_ERR['UP_SUCC'] + txtwebConf.AUTH_ERR['VER_NEW']%{'email':options.email} # Account details updated successfully. Check your new emailID for verification instructions
