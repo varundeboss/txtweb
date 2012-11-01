@@ -1,4 +1,4 @@
-drop table cust_account if exists;
+drop table if exists cust_account;
 
 CREATE TABLE `cust_account` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
