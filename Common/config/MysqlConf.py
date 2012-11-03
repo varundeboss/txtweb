@@ -29,5 +29,11 @@ MYSQL_CONF = {
                             "MYSQL_PASS" : "vArundebo0s",
                             "DB"         : {'TXW':'u868309719_txtweb'},
                            },
+              "heliohost" : {
+                             "MYSQL_HOST" : "varundeboss.heliohost.org",
+                             "MYSQL_USER" : "vdeboss_vdeboss",
+                             "MYSQL_PASS" : "vArundebo0s",
+                             "DB"         : {'TXW':'vdeboss_TXTWEB'},
+                            },
              }
 

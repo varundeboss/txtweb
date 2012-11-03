@@ -12,7 +12,8 @@ import socket
 
 #os.environ['TXTWEB_HOSTNAME'] = 'dev' #dev | prod 
 TXTWEB_HOSTNAME = 'dev' # dev | prod 
-TXTWEB_MYSQL    = 'pyanywr' # dev | freemysql | pyanywr | sersfree
+#TXTWEB_MYSQL    = 'dev'
+TXTWEB_MYSQL    = 'heliohost' # dev | freemysql | pyanywr | sersfree | heliohost
 
 PROJECT = "Common"
 
