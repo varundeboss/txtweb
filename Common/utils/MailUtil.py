@@ -1,5 +1,5 @@
 import os
-import fcntl
+#import fcntl
 import socket
 import struct
 import smtplib
