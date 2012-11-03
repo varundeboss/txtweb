@@ -10,11 +10,17 @@ import sys
 import time
 import socket
 
-os.environ['TXTWEB_HOSTNAME'] = 'dev' #dev | prod 
+#os.environ['TXTWEB_HOSTNAME'] = 'dev' #dev | prod 
+TXTWEB_HOSTNAME = 'dev' # dev | prod 
+#TXTWEB_MYSQL    = 'dev'
+TXTWEB_MYSQL    = 'heliohost' # dev | freemysql | pyanywr | sersfree | heliohost
 
 PROJECT = "Common"
-project_dir, handler = os.path.split(__file__)
-PROJECT_PATH = project_dir.replace(PROJECT,'')
+
+project_dir = os.path.abspath(__file__)
+PROJECT_PATH = project_dir.replace(PROJECT+"/"+__file__.split("/")[-1],'')
+#project_dir, handler = os.path.split(__file__)
+#PROJECT_PATH = project_dir.replace(PROJECT,'')
 
 PROJECT_LIST = ["libs","Apps","Smsout"]
 PROJECT_LIST.append(PROJECT)

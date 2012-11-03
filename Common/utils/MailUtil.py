@@ -1,5 +1,5 @@
 import os
-import fcntl
+#import fcntl
 import socket
 import struct
 import smtplib
@@ -16,7 +16,7 @@ from email import Charset
 Charset.add_charset('utf-8', Charset.QP, Charset.QP, 'utf-8')
 
 
-HOSTNAME = commands.getoutput("hostname")
+#HOSTNAME = commands.getoutput("hostname")
 LOGOS = {'LS' :'/public/gdp/ukl/images/logo.jpg',
          'MDL':'/public/gdp/ukl/images/mdl-logo.jpg',
          }
