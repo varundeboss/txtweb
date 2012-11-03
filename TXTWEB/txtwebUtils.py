@@ -18,6 +18,10 @@ from optparse import OptionParser
 from datetime import datetime
 import traceback
 
+_logdata  = None
+_userdata = None
+_lastdata = None
+
 def import_app(txtweb_msg):
     try:
         '''
@@ -82,7 +86,7 @@ def login(username,mobile,session):
                         "LoggedOn"    : datetime.now(),
                         "LogValidity" : session,
                         "LastMobile"  : mobile,
-                        "UpdatedOn"    : datetime.now(),
+                        "UpdatedOn"   : datetime.now(),
                      }
         get_db('TXW').update("cust_account", vars={'Username':username},where="Username=$Username",**login_dict)
         return False, txtwebConf.AUTH_ERR['LIN_SUC'] + txtwebConf.AUTH_ERR['WELCOME'] # Logged in successfully. Send welcome tmpl
@@ -101,6 +105,7 @@ def logout(username):
         return False, txtwebConf.AUTH_ERR['LOUT_FAIL'] + txtwebConf.AUTH_ERR['LOUT_TMPL'] # Problem while logging out. Send logout tmpl
 
 def register(txtwebObj):
+    global _userdata
     try:
         usage = "reg -u [username] -p [password] -f [firstname] -l [lastname] -e [email] -s [sex] -a [age] -c [city] -d [dob] -t[session]"
         parser = OptionParser(usage=usage, version="%prog 1.0")
@@ -116,7 +121,11 @@ def register(txtwebObj):
         parser.add_option("-t", "", action="store", type="string", dest="session", help="")
         options, args = parser.parse_args(txtwebObj.txtweb_msg.split(' '))
        
-        user_det = get_db('TXW').select("cust_account", vars={'Username':options.username},where="Username=$Username").list()
+        if not _userdata:
+            user_det = get_db('TXW').select("cust_account", vars={'Username':options.username},where="Username=$Username").list()
+        else:
+            user_det = _userdata
+
         if user_det:
             return False, txtwebConf.AUTH_ERR['USER_EXIST'] + txtwebConf.AUTH_ERR['REG_TMPL'] # Username already exist. Send registration tmpl
 
@@ -155,6 +164,7 @@ def register(txtwebObj):
         return False, txtwebConf.AUTH_ERR['REG_FAIL'] + txtwebConf.AUTH_ERR['REG_TMPL'] # Problem while registering. Send registration tmpl
 
 def update_details(txtwebObj,log_info):
+    global _userdata
     try:
         usage = "set -f [firstname] -l [lastname]-e [email] -s [sex] -a [age] -c [city] -d [dob]"
         parser = OptionParser(usage=usage, version="%prog 1.0")
@@ -176,7 +186,11 @@ def update_details(txtwebObj,log_info):
         if not op_dict or not update_dict:
             return False, txtwebConf.AUTH_ERR['UP_NTNG'] + txtwebConf.AUTH_ERR['UP_TMPL'] # Nothing given to update. Send update tmpl.
 
-        user_det = get_db('TXW').select("cust_account", vars={'Username':log_info['Username']},where="Username=$Username").list()
+        if not _userdata:
+            user_det = get_db('TXW').select("cust_account", vars={'Username':log_info['Username']},where="Username=$Username").list()
+        else:
+            user_det = _userdata
+
         if options.email and options.email != user_det[0]['Email']:
             verify_id = gen_verify_id()
             update_dict.update({"VerifyID":verify_id, "UpdatedOn":datetime.now()})
@@ -225,8 +239,13 @@ def update_obj_account(txtwebObj,log_info):
     txtwebObj.keyword = txtwebConf.TXTWEB_KEYWORD
 
 def check_auth(txtwebObj):
+    global _userdata
     try:
-        cust_info = get_db('TXW').select("cust_account", vars={'Mobile':txtwebObj.txtweb_mobile}, where="Mobile=$Mobile").list()
+        if not _userdata:
+            cust_info = get_db('TXW').select("cust_account", vars={'Mobile':txtwebObj.txtweb_mobile}, where="Mobile=$Mobile").list()
+        else:
+            cust_info = _userdata
+
         log_info  = get_db('TXW').select("cust_account", vars={'Mobile':txtwebObj.txtweb_mobile}, where="LastMobile=$Mobile").list()
         app_name = txtwebObj.txtweb_msg.split(' ')[0].upper()
 
@@ -269,7 +288,12 @@ def check_auth(txtwebObj):
                 username = msg_list[1] 
             else:
                 return False, txtwebConf.AUTH_ERR['CRED_MISS'] + txtwebConf.AUTH_ERR['LIN_TMPL'] #Username and password missing. Send login tmpl
-            user_info  = get_db('TXW').select("cust_account", vars={'Username':username}, where="Username=$Username").list()
+
+            if not _userdata:
+                user_info  = get_db('TXW').select("cust_account", vars={'Username':username}, where="Username=$Username").list()
+            else:
+                user_info = _userdata
+
             if not user_info:
                 return False, txtwebConf.AUTH_ERR['USER_MISS'] + txtwebConf.AUTH_ERR['REG_TMPL'] # Username not found. Send tmpl for registration
 
