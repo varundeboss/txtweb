@@ -11,7 +11,8 @@ TXTWEB_KEYWORD = TXTWEB_KEYWORD.upper()
 
 SESSION_TIME = 720
 
-FROM_EMAIL = 'admin@%(keyword)s.txtweb.com'%{'keyword':TXTWEB_KEYWORD}
+#FROM_EMAIL = 'admin@%(keyword)s.txtweb.com'%{'keyword':TXTWEB_KEYWORD}
+FROM_EMAIL = "%(keyword)s.txtweb@gmail.com"%{'keyword':TXTWEB_KEYWORD}
 
 URL_APP_MAP = {
                'dev' : {

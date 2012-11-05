@@ -8,7 +8,11 @@ import txtwebConf
 #from importlib import import_module
 
 import Common
-from Common.utils.MailUtil import send_mail
+
+if Common.TXTWEB_HOSTNAME in Common.HOSTNAME_NORMAL:
+    from Common.utils.MailUtil import send_mail
+if Common.TXTWEB_HOSTNAME in Common.HOSTNAME_GOOGLE:
+    from google.appengine.api import mail
 
 from Common.config.MailConf import mail_config
 
@@ -84,7 +88,10 @@ def send_verify_id(Firstname,Email,verify_id,Username):
     try:
         subject = "%(keyword)s verification code"%{'keyword':txtwebConf.TXTWEB_KEYWORD.upper()}
         body = "Greetings %(Firstname)s,\n\n\tThank you for choosing %(keyword)s.\n\n\tTo verify your account please send @%(keyword)s ver [Username] [Password] %(verifyid)s"%{'Firstname':Firstname, 'keyword':txtwebConf.TXTWEB_KEYWORD.upper(), 'verifyid':verify_id}
-        send_mail(mail_config, txtwebConf.FROM_EMAIL, [Email], subject, body,files=[])
+        if Common.TXTWEB_HOSTNAME in Common.HOSTNAME_NORMAL:
+            send_mail(mail_config, txtwebConf.FROM_EMAIL, [Email], subject, body,files=[])
+        if Common.TXTWEB_HOSTNAME in Common.HOSTNAME_GOOGLE:
+            mail.send_mail(sender=txtwebConf.FROM_EMAIL,to=[Email],subject=subject,body=body)
         up_dict = {'EmailFlag':True}
         if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
             table_obj = txtweb_models.cust_account().all().filter('Username',Username)

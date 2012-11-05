@@ -11,7 +11,7 @@ import time
 import socket
 
 #os.environ['TXTWEB_HOSTNAME'] = 'dev' #dev | prod 
-TXTWEB_HOSTNAME = 'dev' # dev | normal | appserver
+TXTWEB_HOSTNAME = 'appserver' # dev | normal | appserver
 HOSTNAME_NORMAL = ['dev','normal']
 HOSTNAME_GOOGLE = ['appserver']
 
