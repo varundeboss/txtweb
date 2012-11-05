@@ -157,6 +157,7 @@ def register(txtwebObj):
         parser.add_option("-d", "", action="store", type="string", dest="DOB", help="")
         parser.add_option("-t", "", action="store", type="string", dest="Session", help="")
         options, args = parser.parse_args(txtwebObj.txtweb_msg.split(' '))
+        '''
         if not _userdata:
             if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
                 table_obj = txtweb_models.cust_account().all().filter('Username',options.Username)
@@ -165,6 +166,12 @@ def register(txtwebObj):
                 user_det = get_db('TXW').select("cust_account", vars={'Username':options.Username},where="Username=$Username").list()
         else:
             user_det = _userdata
+        '''
+        if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+            table_obj = txtweb_models.cust_account().all().filter('Username',options.Username)
+            user_det = get_gql('TXW',"select",table_obj,"",{})
+        if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+            user_det = get_db('TXW').select("cust_account", vars={'Username':options.Username},where="Username=$Username").list()
 
         if user_det:
             return False, txtwebConf.AUTH_ERR['USER_EXIST'] + txtwebConf.AUTH_ERR['REG_TMPL'] # Username already exist. Send registration tmpl
@@ -248,7 +255,7 @@ def update_details(txtwebObj,log_info):
 
         if not op_dict or not update_dict:
             return False, txtwebConf.AUTH_ERR['UP_NTNG'] + txtwebConf.AUTH_ERR['UP_TMPL'] # Nothing given to update. Send update tmpl.
-
+        '''
         if not _userdata:
             if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
                 table_obj = txtweb_models.cust_account().all().filter('Username',log_info['Username'])
@@ -257,6 +264,12 @@ def update_details(txtwebObj,log_info):
                 user_det = get_db('TXW').select("cust_account", vars={'Username':log_info['Username']},where="Username=$Username").list()
         else:
             user_det = _userdata
+        '''
+        if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+            table_obj = txtweb_models.cust_account().all().filter('Username',options.Username)
+            user_det = get_gql('TXW',"select",table_obj,"",{})
+        if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+            user_det = get_db('TXW').select("cust_account", vars={'Username':options.Username},where="Username=$Username").list()
 
         if options.Email and options.Email != user_det[0]['Email']:
             verify_id = gen_verify_id()
@@ -329,6 +342,7 @@ def update_obj_account(txtwebObj,log_info):
 def check_auth(txtwebObj):
     global _userdata
     try:
+        '''
         if not _userdata:
             if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
                 table_obj = txtweb_models.cust_account().all().filter('Mobile',txtwebObj.txtweb_mobile)
@@ -339,6 +353,13 @@ def check_auth(txtwebObj):
             _userdata = cust_info
         else:
             cust_info = _userdata
+        '''
+        if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+            table_obj = txtweb_models.cust_account().all().filter('Mobile',txtwebObj.txtweb_mobile)
+            query = "select * from cust_account where ANCESTOR is :1 and Mobile='%(Mobile)s'"%{'Mobile':txtwebObj.txtweb_mobile}
+            cust_info = get_gql('TXW',"select",table_obj,query,{})
+        if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+            cust_info = get_db('TXW').select("cust_account", vars={'Mobile':txtwebObj.txtweb_mobile}, where="Mobile=$Mobile").list()
 
         if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
             table_obj = txtweb_models.cust_account().all().filter('LastMobile',txtwebObj.txtweb_mobile)
@@ -389,7 +410,7 @@ def check_auth(txtwebObj):
                 Username = msg_list[1] 
             else:
                 return False, txtwebConf.AUTH_ERR['CRED_MISS'] + txtwebConf.AUTH_ERR['LIN_TMPL'] #Username and Password missing. Send login tmpl
-
+            '''
             if not _userdata:
                 if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
                     table_obj = txtweb_models.cust_account().all().filter('Username',Username)
@@ -399,6 +420,13 @@ def check_auth(txtwebObj):
                     user_info  = get_db('TXW').select("cust_account", vars={'Username':Username}, where="Username=$Username").list()
             else:
                 user_info = _userdata
+            '''
+            if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+                table_obj = txtweb_models.cust_account().all().filter('Username',Username)
+                query = "select * from cust_account where ANCESTOR is :1 and Username='%(Username)s'"%{'Username':Username}
+                user_info = get_gql('TXW',"select",table_obj,query,{})
+            if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+                user_info  = get_db('TXW').select("cust_account", vars={'Username':Username}, where="Username=$Username").list() 
 
             if not user_info:
                 return False, txtwebConf.AUTH_ERR['USER_MISS'] + txtwebConf.AUTH_ERR['REG_TMPL'] # Username not found. Send tmpl for registration
