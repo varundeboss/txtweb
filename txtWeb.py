@@ -1,5 +1,5 @@
 import webapp2
-from google.appengine.api import rdbms
+#from google.appengine.api import rdbms
 
 import urllib
 

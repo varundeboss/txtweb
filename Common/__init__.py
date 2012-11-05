@@ -11,9 +11,13 @@ import time
 import socket
 
 #os.environ['TXTWEB_HOSTNAME'] = 'dev' #dev | prod 
-TXTWEB_HOSTNAME = 'dev' # dev | prod 
-#TXTWEB_MYSQL    = 'dev'
-TXTWEB_MYSQL    = 'heliohost' # dev | freemysql | pyanywr | sersfree | heliohost
+TXTWEB_HOSTNAME = 'dev' # dev | normal | appserver
+HOSTNAME_NORMAL = ['dev','normal']
+HOSTNAME_GOOGLE = ['appserver']
+
+TXTWEB_MYSQL    = 'appserver' # dev | freemysql | pyanywr | sersfree | heliohost | appserver
+MYSQL_NORMAL = ['dev','freemysql','pyanywr','sersfree','heliohost']
+MYSQL_GOOGLE = ['appserver']
 
 PROJECT = "Common"
 

@@ -7,10 +7,16 @@ Created on Sep 8, 2012
 import txtwebConf
 #from importlib import import_module
 
-from Common.utils.db.db_conn import get_db
+import Common
 from Common.utils.MailUtil import send_mail
 
 from Common.config.MailConf import mail_config
+
+if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+    import txtweb_models
+    from Common.utils.db.db_conn import get_gql
+if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+    from Common.utils.db.db_conn import get_db
 
 import os
 import random
@@ -49,9 +55,9 @@ def check_expiry(log_info):
     now  = datetime.now().replace(microsecond=0)
     then = log_info['LoggedOn']
     #then = datetime.strptime(log_info['LoggedOn'],'%Y-%m-%d %H-%M-%S')
-    session = int(log_info['LogValidity'])
+    Session = int(log_info['LogValidity'])
     diff = now - then
-    return ((diff.seconds/60) + (diff.days*24*60)) < session
+    return ((diff.seconds/60) + (diff.days*24*60)) < Session
 
 def check_credentials(cust_info, txtwebObj):
     msg_list = txtwebObj.txtweb_msg.split(' ')
@@ -62,43 +68,67 @@ def check_credentials(cust_info, txtwebObj):
 def gen_user_id():
     while 1:
         userid = random.randrange(100000,1000000)
-        userid_info = get_db('TXW').query("select * from cust_account where UserID='%(userid)s'"%{'userid':userid}).list()
+        if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+            table_obj = txtweb_models.cust_account().all().filter('UserID',userid)
+            userid_info = get_gql('TXW',"select",table_obj,"",{})
+        if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+            userid_info = get_db('TXW').query("select * from cust_account where UserID='%(userid)s'"%{'userid':userid}).list()
+
         if not userid_info:
-            return userid
+            return int(userid)
 
 def gen_verify_id():
-    return random.randrange(100000,1000000)
+    return int(random.randrange(100000,1000000))
 
-def send_verify_id(firstname,email,verify_id,username):
+def send_verify_id(Firstname,Email,verify_id,Username):
     try:
         subject = "%(keyword)s verification code"%{'keyword':txtwebConf.TXTWEB_KEYWORD.upper()}
-        body = "Greetings %(firstname)s,\n\n\tThank you for choosing %(keyword)s.\n\n\tTo verify your account please send @%(keyword)s ver [username] [password] %(verifyid)s"%{'firstname':firstname, 'keyword':txtwebConf.TXTWEB_KEYWORD.upper(), 'verifyid':verify_id}
-        send_mail(mail_config, txtwebConf.FROM_EMAIL, [email], subject, body,files=[])
-        get_db('TXW').update("cust_account", vars={'Username':username},where="Username=$Username",**{'EmailFlag':1})
-        print "Verification code ",verify_id," sent to email ",email," successfully"
+        body = "Greetings %(Firstname)s,\n\n\tThank you for choosing %(keyword)s.\n\n\tTo verify your account please send @%(keyword)s ver [Username] [Password] %(verifyid)s"%{'Firstname':Firstname, 'keyword':txtwebConf.TXTWEB_KEYWORD.upper(), 'verifyid':verify_id}
+        send_mail(mail_config, txtwebConf.FROM_EMAIL, [Email], subject, body,files=[])
+        up_dict = {'EmailFlag':True}
+        if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+            table_obj = txtweb_models.cust_account().all().filter('Username',Username)
+            get_gql('TXW',"update",table_obj,"",up_dict)
+        if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+            get_db('TXW').update("cust_account", vars={'Username':Username},where="Username=$Username",**up_dict)
+        print "Verification code ",verify_id," sent to Email ",Email," successfully"
     except:
-        print "Verification code ",verify_id," sent to email ",email," failed"
+        up_dict = {'EmailFlag':False}
+        if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+            table_obj = txtweb_models.cust_account().all().filter('Username',Username)
+            get_gql('TXW',"update",table_obj,"",up_dict)
+        if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+            get_db('TXW').update("cust_account", vars={'Username':Username},where="Username=$Username",**up_dict)
+        print "Verification code ",verify_id," sent to Email ",Email," failed"
 
-def login(username,mobile,session):
+def login(Username,mobile,Session):
     try:
         login_dict = {
-                        "LogFlag"     : "1",
+                        "LogFlag"     : True,
                         "LoggedOn"    : datetime.now(),
-                        "LogValidity" : session,
+                        "LogValidity" : int(Session),
                         "LastMobile"  : mobile,
                         "UpdatedOn"   : datetime.now(),
                      }
-        get_db('TXW').update("cust_account", vars={'Username':username},where="Username=$Username",**login_dict)
+        if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+            table_obj = txtweb_models.cust_account().all().filter('Username',Username)
+            get_gql('TXW',"update",table_obj,"",login_dict)
+        if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+            get_db('TXW').update("cust_account", vars={'Username':Username},where="Username=$Username",**login_dict)
         return False, txtwebConf.AUTH_ERR['LIN_SUC'] + txtwebConf.AUTH_ERR['WELCOME'] # Logged in successfully. Send welcome tmpl
     except:
         return False, txtwebConf.AUTH_ERR['LIN_FAIL'] + txtwebConf.AUTH_ERR['LIN_TMPL'] # Problem while logging in. Send login tmpl
 
-def logout(username):
+def logout(Username):
     try:
         logout_dict = {
-                        "LogFlag" : "0", 
+                        "LogFlag" : False, 
                       }
-        get_db('TXW').update("cust_account", vars={'Username':username},where="Username=$Username",**logout_dict)
+        if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+            table_obj = txtweb_models.cust_account().all().filter('Username',Username)
+            get_gql('TXW',"update",table_obj,"",logout_dict)
+        if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+            get_db('TXW').update("cust_account", vars={'Username':Username},where="Username=$Username",**logout_dict)
         print "Logged out successfully"
         return False, txtwebConf.AUTH_ERR['LOUT_SUC'] + txtwebConf.AUTH_ERR['LIN_TMPL'] # Logged out successfully. Send login tmpl
     except:
@@ -107,22 +137,25 @@ def logout(username):
 def register(txtwebObj):
     global _userdata
     try:
-        usage = "reg -u [username] -p [password] -f [firstname] -l [lastname] -e [email] -s [sex] -a [age] -c [city] -d [dob] -t[session]"
+        usage = "reg -u [Username] -p [Password] -f [Firstname] -l [Lastname] -e [Email] -s [Sex] -a [Age] -c [City] -d [DOB] -t[Session]"
         parser = OptionParser(usage=usage, version="%prog 1.0")
-        parser.add_option("-u", "", action="store", type="string", dest="username", help="")
-        parser.add_option("-p", "", action="store", type="string", dest="password", help="")
-        parser.add_option("-f", "", action="store", type="string", dest="firstname", help="")
-        parser.add_option("-l", "", action="store", type="string", dest="lastname", help="")
-        parser.add_option("-e", "", action="store", type="string", dest="email", help="")
-        parser.add_option("-s", "", action="store", type="string", dest="sex", help="")
-        parser.add_option("-a", "", action="store", type="string", dest="age", help="")
-        parser.add_option("-c", "", action="store", type="string", dest="city", help="")
-        parser.add_option("-d", "", action="store", type="string", dest="dob", help="")
-        parser.add_option("-t", "", action="store", type="string", dest="session", help="")
+        parser.add_option("-u", "", action="store", type="string", dest="Username", help="")
+        parser.add_option("-p", "", action="store", type="string", dest="Password", help="")
+        parser.add_option("-f", "", action="store", type="string", dest="Firstname", help="")
+        parser.add_option("-l", "", action="store", type="string", dest="Lastname", help="")
+        parser.add_option("-e", "", action="store", type="string", dest="Email", help="")
+        parser.add_option("-s", "", action="store", type="string", dest="Sex", help="")
+        parser.add_option("-a", "", action="store", type="string", dest="Age", help="")
+        parser.add_option("-c", "", action="store", type="string", dest="City", help="")
+        parser.add_option("-d", "", action="store", type="string", dest="DOB", help="")
+        parser.add_option("-t", "", action="store", type="string", dest="Session", help="")
         options, args = parser.parse_args(txtwebObj.txtweb_msg.split(' '))
-       
         if not _userdata:
-            user_det = get_db('TXW').select("cust_account", vars={'Username':options.username},where="Username=$Username").list()
+            if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+                table_obj = txtweb_models.cust_account().all().filter('Username',options.Username)
+                user_det = get_gql('TXW',"select",table_obj,"",{})
+            if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+                user_det = get_db('TXW').select("cust_account", vars={'Username':options.Username},where="Username=$Username").list()
         else:
             user_det = _userdata
 
@@ -133,78 +166,121 @@ def register(txtwebObj):
             if not getattr(options,field):
                 return False, txtwebConf.AUTH_ERR['REG_MAND'] + txtwebConf.AUTH_ERR['REG_TMPL'] # One of the mandatory field is missing. Send registration tmpl
 
-        try:session = int(options.session)
-        except:session = txtwebConf.SESSION_TIME
+        try:Session = int(options.Session)
+        except:Session = txtwebConf.SESSION_TIME
         
         verify_id = gen_verify_id()
 
         register_dict = {
-                            "Username" : options.username,
-                            "Password" : options.password,
-                            "Firstname" : options.firstname,
-                            "Lastname" : options.lastname,
-                            "Email" : options.email,
-                            "Sex" : options.sex[0].upper(),
-                            "Age" : options.age,
-                            "City" : options.city,
-                            "DOB" : options.dob,
-                            "LogValidity" : session,
+                            "Username" : options.Username,
+                            "Password" : options.Password,
+                            "Firstname" : options.Firstname,
+                            "Lastname" : options.Lastname,
+                            "Email" : options.Email,
+                            "Sex" : options.Sex[0].upper(),
+                            "Age" : options.Age,
+                            "City" : options.City,
+                            "DOB" : options.DOB,
+                            "LogValidity" : Session,
                             "UserID" : gen_user_id(),
                             "Mobile" : txtwebObj.txtweb_mobile,
                             "LastMobile" : txtwebObj.txtweb_mobile,
-                            "LogFlag" : "1",
+                            "LogFlag" : True,
                             "LoggedOn" : datetime.now(),
                             "VerifyID" : verify_id,
+                            "VerifyFlag" : False
                         }
-        get_db('TXW').insert("cust_account",**register_dict)
-        #Send verification ID in registered email
-        send_verify_id(options.firstname, options.email, verify_id, options.username)
-        return False, txtwebConf.AUTH_ERR['REG_SUC'] + txtwebConf.AUTH_ERR['VER_SENT']%{'email':options.email} # Registered successfully. Tell to verify
+        for value in register_dict:
+            if value in txtwebConf.INT_LIST:
+                register_dict[value] = int(register_dict[value])
+            if value in txtwebConf.DATE_LIST:
+                register_dict[value] = datetime.strptime(register_dict[value],'%Y-%m-%d').date()
+            if value in txtwebConf.STR_LIST:
+                register_dict[value] = str(register_dict[value])
+            if value in txtwebConf.BOOL_LIST:
+                register_dict[value] = bool(register_dict[value])
+
+        if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+            table_obj = txtweb_models.cust_account()
+            get_gql('TXW',"insert",table_obj,"",register_dict)
+        if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+            get_db('TXW').insert("cust_account",**register_dict)
+        #Send verification ID in registered Email
+        send_verify_id(options.Firstname, options.Email, verify_id, options.Username)
+        return False, txtwebConf.AUTH_ERR['REG_SUC'] + txtwebConf.AUTH_ERR['VER_SENT']%{'Email':options.Email} # Registered successfully. Tell to verify
     except Exception,e:
         return False, txtwebConf.AUTH_ERR['REG_FAIL'] + txtwebConf.AUTH_ERR['REG_TMPL'] # Problem while registering. Send registration tmpl
 
 def update_details(txtwebObj,log_info):
     global _userdata
     try:
-        usage = "set -f [firstname] -l [lastname]-e [email] -s [sex] -a [age] -c [city] -d [dob]"
+        usage = "set -f [Firstname] -l [Lastname]-e [Email] -s [Sex] -a [Age] -c [City] -d [DOB]"
         parser = OptionParser(usage=usage, version="%prog 1.0")
-        parser.add_option("-f", "", action="store", type="string", dest="firstname", help="")
-        parser.add_option("-l", "", action="store", type="string", dest="lastname", help="")
-        parser.add_option("-e", "", action="store", type="string", dest="email", help="")
-        parser.add_option("-s", "", action="store", type="string", dest="sex", help="")
-        parser.add_option("-a", "", action="store", type="string", dest="age", help="")
-        parser.add_option("-c", "", action="store", type="string", dest="city", help="")
-        parser.add_option("-d", "", action="store", type="string", dest="dob", help="")
+        parser.add_option("-f", "", action="store", type="string", dest="Firstname", help="")
+        parser.add_option("-l", "", action="store", type="string", dest="Lastname", help="")
+        parser.add_option("-e", "", action="store", type="string", dest="Email", help="")
+        parser.add_option("-s", "", action="store", type="string", dest="Sex", help="")
+        parser.add_option("-a", "", action="store", type="string", dest="Age", help="")
+        parser.add_option("-c", "", action="store", type="string", dest="City", help="")
+        parser.add_option("-d", "", action="store", type="string", dest="DOB", help="")
         options, args = parser.parse_args(txtwebObj.txtweb_msg.split(' '))
 
         update_dict = {}
         op_dict = options.__dict__
         for field in op_dict:
             if op_dict[field]:
+                if field in txtwebConf.DATE_LIST:
+                    op_dict[field] = datetime.strptime(op_dict[field],'%Y-%m-%d').date()
+                if field in txtwebConf.INT_LIST:
+                    op_dict[field] = int(op_dict[field])
+                if field in txtwebConf.STR_LIST:
+                    op_dict[field] = str(op_dict[field])
+                if field in txtwebConf.BOOL_LIST:
+                    op_dict[field] = bool(op_dict[field])
                 update_dict[field] =  op_dict[field]
 
         if not op_dict or not update_dict:
             return False, txtwebConf.AUTH_ERR['UP_NTNG'] + txtwebConf.AUTH_ERR['UP_TMPL'] # Nothing given to update. Send update tmpl.
 
         if not _userdata:
-            user_det = get_db('TXW').select("cust_account", vars={'Username':log_info['Username']},where="Username=$Username").list()
+            if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+                table_obj = txtweb_models.cust_account().all().filter('Username',log_info['Username'])
+                user_det = get_gql('TXW',"select",table_obj,"",{})
+            if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+                user_det = get_db('TXW').select("cust_account", vars={'Username':log_info['Username']},where="Username=$Username").list()
         else:
             user_det = _userdata
 
-        if options.email and options.email != user_det[0]['Email']:
+        if options.Email and options.Email != user_det[0]['Email']:
             verify_id = gen_verify_id()
-            update_dict.update({"VerifyID":verify_id, "UpdatedOn":datetime.now()})
+            update_dict.update({"VerifyID":int(verify_id), "UpdatedOn":datetime.now()})
 
-        up_flag = get_db('TXW').update("cust_account", vars={'Username':log_info['Username']},where="Username=$Username",**update_dict)
+        if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+            table_obj = txtweb_models.cust_account().all().filter('Username',log_info['Username'])
+            up_flag = get_gql('TXW',"update",table_obj,"",update_dict)
+        if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+            up_flag = get_db('TXW').update("cust_account", vars={'Username':log_info['Username']},where="Username=$Username",**update_dict)
+
         if up_flag:
-            if options.email and options.email != user_det[0]['Email']:
-                #Send verification ID in registered email
-                send_verify_id(log_info['Firstname'], options.email, verify_id, log_info['Username'])
+            if options.Email and options.Email != user_det[0]['Email']:
+                #Send verification ID in registered Email
+                send_verify_id(log_info['Firstname'], options.Email, verify_id, log_info['Username'])
                 logout(log_info['Username'])
-                get_db('TXW').update("cust_account", vars={'Username':log_info['Username']},where="Username=$Username",**{'VerifyFlag':'0',"UpdatedOn":datetime.now()})
-                return False, txtwebConf.AUTH_ERR['UP_SUCC'] + txtwebConf.AUTH_ERR['VER_NEW']%{'email':options.email} # Account details updated successfully. Check your new emailID for verification instructions
+                
+                verify_dict = {'VerifyFlag':False,"UpdatedOn":datetime.now()}
+                if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+                    table_obj = txtweb_models.cust_account().all().filter('Username',log_info['Username'])
+                    get_gql('TXW',"update",table_obj,"",verify_dict)
+                if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+                    get_db('TXW').update("cust_account", vars={'Username':log_info['Username']},where="Username=$Username",**verify_dict)
+                return False, txtwebConf.AUTH_ERR['UP_SUCC'] + txtwebConf.AUTH_ERR['VER_NEW']%{'Email':options.Email} # Account details updated successfully. Check your new EmailID for verification instructions
             else:
-                get_db('TXW').update("cust_account", vars={'Username':log_info['Username']},where="Username=$Username",**{"UpdatedOn":datetime.now()})
+                upon_dict = {"UpdatedOn":datetime.now()}
+                if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+                    table_obj = txtweb_models.cust_account().all().filter('Username',log_info['Username'])
+                    get_gql('TXW',"update",table_obj,"",upon_dict)
+                if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+                    get_db('TXW').update("cust_account", vars={'Username':log_info['Username']},where="Username=$Username",**upon_dict)
             return False, txtwebConf.AUTH_ERR['UP_SUCC'] + txtwebConf.AUTH_ERR['WELCOME'] # Account details updated successfully. Send welcome tmpl
         else:
             return False, txtwebConf.AUTH_ERR['UP_SAME'] + txtwebConf.AUTH_ERR['WELCOME'] # Same account details sent. Nothing to update. Send welcome tmpl
@@ -224,9 +300,14 @@ def verify_account(log_info,txtwebObj):
 
         verify_id = msg_list[3]
         if str(log_info['VerifyID']) == verify_id:
-            get_db('TXW').update("cust_account", vars={'Username':log_info['Username']},where="Username=$Username",**{'VerifyFlag':'1','UpdatedOn':datetime.now()})
+            ver_dict = {'VerifyFlag':True,'UpdatedOn':datetime.now()}
+            if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+                table_obj = txtweb_models.cust_account().all().filter('Username',log_info['Username'])
+                get_gql('TXW',"update",table_obj,"",ver_dict)
+            if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+                get_db('TXW').update("cust_account", vars={'Username':log_info['Username']},where="Username=$Username",**ver_dict)
             return False, txtwebConf.AUTH_ERR['VER_SUC'] + txtwebConf.AUTH_ERR['WELCOME'] # Verified successfully. Send welcome tmpl
-        return False, txtwebConf.AUTH_ERR['VER_WRNG']%{'email':log_info['Email']} # Verifyid wrong. Check email for correct ID
+        return False, txtwebConf.AUTH_ERR['VER_WRNG']%{'Email':log_info['Email']} # Verifyid wrong. Check Email for correct ID
     except Exception,e:
         return False, txtwebConf.AUTH_ERR['VER_FAIL'] + txtwebConf.AUTH_ERR['VER_TMPL'] # Error while verifying account. Send verify tmpl
 
@@ -242,11 +323,23 @@ def check_auth(txtwebObj):
     global _userdata
     try:
         if not _userdata:
-            cust_info = get_db('TXW').select("cust_account", vars={'Mobile':txtwebObj.txtweb_mobile}, where="Mobile=$Mobile").list()
+            if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+                table_obj = txtweb_models.cust_account().all().filter('Mobile',txtwebObj.txtweb_mobile)
+                query = "select * from cust_account where ANCESTOR is :1 and Mobile='%(Mobile)s'"%{'Mobile':txtwebObj.txtweb_mobile}
+                cust_info = get_gql('TXW',"select",table_obj,query,{})
+            if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+                cust_info = get_db('TXW').select("cust_account", vars={'Mobile':txtwebObj.txtweb_mobile}, where="Mobile=$Mobile").list()
+            _userdata = cust_info
         else:
             cust_info = _userdata
 
-        log_info  = get_db('TXW').select("cust_account", vars={'Mobile':txtwebObj.txtweb_mobile}, where="LastMobile=$Mobile").list()
+        if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+            table_obj = txtweb_models.cust_account().all().filter('LastMobile',txtwebObj.txtweb_mobile)
+            query = "select * from cust_account where ANCESTOR is :1 and LastMobile='%(Mobile)s'"%{'Mobile':txtwebObj.txtweb_mobile}
+            log_info = get_gql('TXW',"select",table_obj,query)
+        if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+            log_info  = get_db('TXW').select("cust_account", vars={'Mobile':txtwebObj.txtweb_mobile}, where="LastMobile=$Mobile").list()
+        
         app_name = txtwebObj.txtweb_msg.split(' ')[0].upper()
 
         # Register the account if not already and send the verification ID to registered EmailID or ask to login using credentials.
@@ -265,12 +358,13 @@ def check_auth(txtwebObj):
                 return False, txtwebConf.AUTH_ERR['LIN_NOT'] + txtwebConf.AUTH_ERR['LIN_TMPL'] # Not Loggedin.Send tmpl for login
 
             if not log_info[0]['VerifyFlag']:
-                return False, txtwebConf.AUTH_ERR['VER_NOT']%{'email':log_info[0]['Email']} # Not verified. please verify
+                return False, txtwebConf.AUTH_ERR['VER_NOT']%{'Email':log_info[0]['Email']} # Not verified. please verify
 
             if not int(log_info[0]['LogFlag']):
                 return False, txtwebConf.AUTH_ERR['LIN_NOT'] + txtwebConf.AUTH_ERR['LIN_TMPL'] # Not logged in. Send login tmpl
 
             if not check_expiry(log_info[0]):
+                logout(log_info[0]['Username'])
                 return False, txtwebConf.AUTH_ERR['LIN_EXP'] + txtwebConf.AUTH_ERR['LIN_TMPL'] # Expired. Please login by sending tmpl
             
             if app_name == "SET":
@@ -285,12 +379,17 @@ def check_auth(txtwebObj):
         if app_name == "LOGIN":
             msg_list = txtwebObj.txtweb_msg.split(' ')
             if len(msg_list) > 1:
-                username = msg_list[1] 
+                Username = msg_list[1] 
             else:
-                return False, txtwebConf.AUTH_ERR['CRED_MISS'] + txtwebConf.AUTH_ERR['LIN_TMPL'] #Username and password missing. Send login tmpl
+                return False, txtwebConf.AUTH_ERR['CRED_MISS'] + txtwebConf.AUTH_ERR['LIN_TMPL'] #Username and Password missing. Send login tmpl
 
             if not _userdata:
-                user_info  = get_db('TXW').select("cust_account", vars={'Username':username}, where="Username=$Username").list()
+                if Common.TXTWEB_MYSQL in Common.MYSQL_GOOGLE:
+                    table_obj = txtweb_models.cust_account().all().filter('Username',Username)
+                    query = "select * from cust_account where ANCESTOR is :1 and Username='%(Username)s'"%{'Username':Username}
+                    user_info = get_gql('TXW',"select",table_obj,query,{})
+                if Common.TXTWEB_MYSQL in Common.MYSQL_NORMAL:
+                    user_info  = get_db('TXW').select("cust_account", vars={'Username':Username}, where="Username=$Username").list()
             else:
                 user_info = _userdata
 
@@ -301,16 +400,16 @@ def check_auth(txtwebObj):
                 return False, txtwebConf.AUTH_ERR['CRED_NOT'] + txtwebConf.AUTH_ERR['LIN_TMPL'] # Credentials wrong. Send tmpl to login
 
             if not user_info[0]['VerifyFlag']:
-                return False, txtwebConf.AUTH_ERR['VER_NOT']%{'email':user_info[0]['Email']} # Not verified. please verify 
+                return False, txtwebConf.AUTH_ERR['VER_NOT']%{'Email':user_info[0]['Email']} # Not verified. please verify 
 
             if len(msg_list) > 3:
-                try:session = int(msg_list[3])
-                except:session = txtwebConf.SESSION_TIME
+                try:Session = int(msg_list[3])
+                except:Session = txtwebConf.SESSION_TIME
             else:
-                session = txtwebConf.SESSION_TIME
+                Session = txtwebConf.SESSION_TIME
 
             # Login
-            return login(username,txtwebObj.txtweb_mobile,session)
+            return login(Username,txtwebObj.txtweb_mobile,Session)
 
         # Logout by checking if exists, Credentials and LogFlag else return corresponding error messages
         if app_name == "LOGOUT":
@@ -358,13 +457,14 @@ def check_auth(txtwebObj):
         
         # Check VerifyFlag and LogFlag,LogValidity and logout if LogFlag=1 and LogValidity expired else autheticate
         if not log_info[0]['VerifyFlag']:
-            return False, txtwebConf.AUTH_ERR['VER_NOT']%{'email':log_info[0]['Email']} # Not verified. Pls verify
+            return False, txtwebConf.AUTH_ERR['VER_NOT']%{'Email':log_info[0]['Email']} # Not verified. Pls verify
         
         if log_info[0]['LogFlag']:
             if check_expiry(log_info[0]):
                 update_obj_account(txtwebObj,log_info[0])
                 return True, "Authenticated"
             else:
+                logout(log_info[0]['Username'])
                 return False, txtwebConf.AUTH_ERR['LIN_EXP'] + txtwebConf.AUTH_ERR['LIN_TMPL'] # Session expired. Send login tmpl
         else:
             return False, txtwebConf.AUTH_ERR['LOUT_SUC'] + txtwebConf.AUTH_ERR['LIN_TMPL'] # You are logged out. Send login tmpl
