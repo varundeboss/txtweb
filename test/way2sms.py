@@ -26,8 +26,8 @@ def SendSMS(mobile,text):
     try:
         br.open("http://site3.way2sms.com/entry.jsp")
         br.select_form(name="loginform")
-        br["username"] = "8870435477"  #YOUR MOBILE NUMBER HERE
-        br["password"] = "theboss"  #YOUR PASSWORD HERE
+        br["username"] = "111"  #YOUR MOBILE NUMBER HERE
+        br["password"] = "111"  #YOUR PASSWORD HERE
         br.form.method="POST"
         br.form.action="http://site1.way2sms.com/Login1.action"
         print ">>> " + br.title()
@@ -56,7 +56,7 @@ def SendSMS(mobile,text):
         sys.exit(1)
 
 def main():
-    PH_MAP = {'varun':'8870435477', 'vishnu':'8754511875'}
+    PH_MAP = {'varun':'111', 'vishnu':'111'}
     parser = OptionParser()
     usage = "Usage: %prog -m [number] -t [text]"
     parser = OptionParser(usage=usage, version="%prog 1.0")
