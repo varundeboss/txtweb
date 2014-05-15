@@ -26,8 +26,8 @@ class WayToSms:
         try:
             self.br.open("http://site3.way2sms.com/entry.jsp")
             self.br.select_form(name="loginform")
-            self.br["username"] = "8870435477"  #YOUR MOBILE NUMBER HERE
-            self.br["password"] = "theboss"  #YOUR PASSWORD HERE
+            self.br["username"] = "111"  #YOUR MOBILE NUMBER HERE
+            self.br["password"] = "111"  #YOUR PASSWORD HERE
             self.br.form.method="POST"
             self.br.form.action="http://site1.way2sms.com/Login1.action"
             print ">>> " + self.br.title()
@@ -72,8 +72,8 @@ def send_way2sms(sms_list):
 
 if __name__ == "__main__":
     sms_list = [
-                {'mobile':'8870435477', 'text':'test 1'},
-                {'mobile':'8870435477', 'text':'test 2'},
-                {'mobile':'8870435477', 'text':'test 3'},
+                {'mobile':'111', 'text':'test 1'},
+                {'mobile':'111', 'text':'test 2'},
+                {'mobile':'111', 'text':'test 3'},
                ]
     print send_way2sms(sms_list)
