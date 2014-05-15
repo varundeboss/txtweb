@@ -42,7 +42,7 @@ def process_txtweb_request(querystring):
         txtWebObj.put_out_db()
         
         if txtwebConf.WAY2SMSFLAG:
-            sms_list = [{'mobile':'8870435477', 'text':app_resp}]
+            sms_list = [{'mobile':'111', 'text':app_resp}]
             send_way2sms(sms_list)
             return "SUCCESS"
         return txtweb_out_msg
