@@ -1,0 +1,1 @@
+The project contains a common txtWeb request and response handler with the ability to add more apps.
